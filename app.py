@@ -360,19 +360,24 @@ else:
 
                     for i, (disease, confidence) in enumerate(top3):
 
-                        st.markdown(f"""
+                        card_html = f"""
                         <div class='result-card'>
 
-                            <h2 style='color:{colors[i]};'>
-                            {i+1}. {disease}
+                            <h2 style="color:{colors[i]};">
+                                {i+1}. {disease}
                             </h2>
 
-                            <p style='font-size:22px; color:white;'>
-                            Confidence: {confidence}%
+                            <p style="font-size:22px; color:white;">
+                                Confidence: {confidence}%
                             </p>
 
                         </div>
-                        """, unsafe_allow_html=True)
+                        """
+
+                        st.markdown(
+                            card_html,
+                            unsafe_allow_html=True
+                        )
 
                     # Emergency Detection
                     if (
