@@ -1,129 +1,315 @@
 import streamlit as st
 import os
-import numpy as np
 from model import train_and_save, load_model
 from auth import register, login, save_history, get_history
 
-# ---------- MODEL ----------
+# ---------------- PAGE CONFIG ----------------
+st.set_page_config(
+    page_title="AI Health Assistant",
+    page_icon="🩺",
+    layout="wide"
+)
+
+# ---------------- CUSTOM CSS ----------------
+st.markdown("""
+<style>
+
+.stApp {
+    background-color: #050816;
+    color: white;
+}
+
+.result-card {
+    background-color: #121a2b;
+    padding: 20px;
+    border-radius: 15px;
+    margin-bottom: 15px;
+    border-left: 5px solid #00ff99;
+}
+
+.big-title {
+    font-size: 50px;
+    font-weight: bold;
+    color: white;
+}
+
+</style>
+""", unsafe_allow_html=True)
+
+# ---------------- TRAIN MODEL ----------------
 if not os.path.exists("model.pkl"):
     train_and_save()
 
 model = load_model()
 
-st.set_page_config(page_title="AI Health Predictor")
+# ---------------- MEDICAL KEYWORDS ----------------
+MEDICAL_KEYWORDS = [
+    "fever", "cough", "cold", "headache", "vomiting", "nausea",
+    "body pain", "fatigue", "tired", "diarrhea", "loose motion",
+    "sore throat", "throat", "chills", "shiver", "runny nose",
+    "congestion", "sneezing", "dizziness", "stomach pain",
+    "bloating", "abdominal pain", "breathlessness", "rash",
+    "itching", "weakness", "chest pain", "constipation",
+    "acidity", "loss of taste", "joint pain"
+]
 
-# ---------- NLP (STRICT MATCH WITH DATASET) ----------
+# ---------------- SYMPTOM EXTRACTION ----------------
 def extract(text):
+
     text = text.lower()
 
-    def has(words):
-        return int(any(w in text for w in words))
-
     return [
-        has(["fever","temperature"]),
-        has(["cough","cold","running nose"]),
-        has(["headache"]),
-        has(["fatigue","tired","weak"]),
-        has(["body pain","body ache"]),
-        has(["diarrhea","loose motion"]),
-        has(["vomit","vomiting"]),
-        has(["throat","sore throat"]),
-        has(["chill","shiver"]),
-        has(["nausea"]),
-        has(["runny nose","running nose"]),
-        has(["congestion","blocked nose"]),
-        has(["sneeze","sneezing"]),
-        has(["dizziness","light headed"]),
-        has(["stomach","abdominal","bloating","gas"]),
-        has(["chest pain"]),
-        has(["breath","breathing issue"]),
-        has(["rash"]),
-        has(["itch","itching"]),
-        has(["weight loss"]),
-        has(["appetite","loss of appetite"])
+
+        int(any(x in text for x in ["fever", "temperature"])),
+
+        int(any(x in text for x in ["cough", "cold"])),
+
+        int("headache" in text),
+
+        int(any(x in text for x in ["fatigue", "tired", "weak"])),
+
+        int(any(x in text for x in ["body pain", "body ache"])),
+
+        int(any(x in text for x in ["diarrhea", "loose motion"])),
+
+        int("vomiting" in text),
+
+        int(any(x in text for x in ["sore throat", "throat"])),
+
+        int(any(x in text for x in ["chills", "shiver"])),
+
+        int("nausea" in text),
+
+        int(any(x in text for x in ["runny nose", "running nose"])),
+
+        int("congestion" in text),
+
+        int("sneezing" in text),
+
+        int("dizziness" in text),
+
+        int(any(x in text for x in ["stomach pain", "abdominal pain"])),
+
+        int("bloating" in text),
+
+        int(any(x in text for x in ["breathlessness", "shortness of breath"])),
+
+        int(any(x in text for x in ["rash", "skin rash"])),
+
+        int("itching" in text),
+
+        int("chest pain" in text)
+
     ]
 
-# ---------- RULE CORRECTION ----------
-def apply_rules(results, f):
-    diarrhea, vomiting, nausea, abdominal = f[5], f[6], f[9], f[14]
+# ---------------- VALIDATION ----------------
+def is_medical_input(text):
 
-    # If stomach symptoms → prioritize correct diseases
-    if abdominal and (vomiting or nausea or diarrhea):
-        priority = {"Food Poisoning", "Stomach Infection"}
-        results = sorted(results, key=lambda x: (x[0] not in priority, -x[1]))
+    text = text.lower()
 
-    return results
+    for word in MEDICAL_KEYWORDS:
+        if word in text:
+            return True
 
-# ---------- AUTH ----------
+    return False
+
+# ---------------- RULE FILTER ----------------
+def rule_filter(results, f):
+
+    (
+        fever, cough, headache, fatigue, body_pain,
+        diarrhea, vomiting, throat, chills, nausea,
+        runny_nose, congestion, sneezing, dizziness,
+        stomach_pain, bloating, breathlessness,
+        rash, itching, chest_pain
+    ) = f
+
+    filtered = []
+
+    for d, p in results:
+
+        if d == "Food Poisoning" and diarrhea == 0 and vomiting == 0:
+            continue
+
+        if d == "Flu" and fever == 0:
+            continue
+
+        if d == "Common Cold" and cough == 0 and runny_nose == 0:
+            continue
+
+        if d == "Malaria" and fever == 0:
+            continue
+
+        if d == "Dengue" and fever == 0:
+            continue
+
+        if d == "Asthma" and breathlessness == 0:
+            continue
+
+        filtered.append((d, p))
+
+    return filtered if filtered else results
+
+# ---------------- SESSION ----------------
 if "user" not in st.session_state:
     st.session_state.user = None
 
+# ---------------- LOGIN PAGE ----------------
 if st.session_state.user is None:
-    st.title("Login / Register")
 
-    mode = st.selectbox("Mode", ["Login","Register"])
-    u = st.text_input("Username")
-    p = st.text_input("Password", type="password")
+    st.markdown(
+        "<h1 class='big-title'>🩺 AI Health Assistant</h1>",
+        unsafe_allow_html=True
+    )
+
+    st.subheader("Login / Register")
+
+    mode = st.selectbox("Select Mode", ["Login", "Register"])
+
+    username = st.text_input("Username")
+    password = st.text_input("Password", type="password")
 
     if mode == "Register":
+
         if st.button("Register"):
-            if register(u,p):
-                st.success("Registered")
+
+            if register(username, password):
+                st.success("Registration Successful")
             else:
-                st.error("User exists")
+                st.error("Username already exists")
 
     else:
+
         if st.button("Login"):
-            if login(u,p):
-                st.session_state.user = u
+
+            if login(username, password):
+                st.session_state.user = username
                 st.rerun()
             else:
-                st.error("Invalid login")
+                st.error("Invalid username or password")
 
-# ---------- MAIN ----------
+# ---------------- MAIN APP ----------------
 else:
-    st.sidebar.title(st.session_state.user)
-    page = st.sidebar.radio("Menu",["Chat","History"])
 
-    if page == "Chat":
-        st.title("AI Health Assistant")
+    st.sidebar.title(f"👤 {st.session_state.user}")
 
-        user_input = st.text_input("Enter symptoms")
+    menu = st.sidebar.radio(
+        "Menu",
+        ["Chat", "History", "About"]
+    )
+
+    # ---------------- CHAT ----------------
+    if menu == "Chat":
+
+        st.markdown(
+            "<h1 class='big-title'>AI Health Assistant</h1>",
+            unsafe_allow_html=True
+        )
+
+        st.write("Enter symptoms separated by commas")
+
+        user_input = st.text_input(
+            "Enter symptoms",
+            placeholder="Example: fever, cough, headache"
+        )
 
         if st.button("Predict"):
-            f = extract(user_input)
 
-            probs = model.predict_proba([f])[0]
-            diseases = model.classes_
+            try:
 
-            # smooth probabilities
-            probs = np.round(probs, 4)
+                if user_input.strip() == "":
+                    st.warning("Please enter symptoms.")
 
-            results = list(zip(diseases, probs))
-            results.sort(key=lambda x: x[1], reverse=True)
+                elif not is_medical_input(user_input):
+                    st.error("Please enter valid medical symptoms.")
 
-            # remove healthy if real symptoms present
-            if sum(f) >= 2:
-                results = [r for r in results if r[0].lower() != "healthy"]
+                else:
 
-            # apply correction rules
-            results = apply_rules(results, f)
+                    f = extract(user_input)
 
-            top3 = results[:3]
+                    probs = model.predict_proba([f])[0]
+                    diseases = model.classes_
 
-            st.subheader("Prediction Result")
+                    results = list(zip(diseases, probs))
+                    results.sort(key=lambda x: x[1], reverse=True)
 
-            for i, (d, p) in enumerate(top3):
-                st.write(f"{i+1}. {d} ({round(p*100,2)}%)")
+                    results = rule_filter(results, f)
 
-            st.info("This is not a medical diagnosis. Consult a doctor.")
+                    st.subheader("Prediction Result")
 
-            save_history(st.session_state.user, {
-                "input": user_input,
-                "result": top3[0][0]
-            })
+                    colors = ["#00ff99", "#facc15", "#ff4d4d"]
 
-    elif page == "History":
-        st.title("History")
-        for item in get_history(st.session_state.user)[::-1]:
-            st.write(f"{item['input']} → {item['result']}")
+                    for i, (d, p) in enumerate(results[:3]):
+
+                        st.markdown(f"""
+                        <div class='result-card'>
+                            <h2 style='color:{colors[i]};'>
+                            {i+1}. {d}
+                            </h2>
+                            <h4>Confidence: {round(p*100,2)}%</h4>
+                        </div>
+                        """, unsafe_allow_html=True)
+
+                    save_history(
+                        st.session_state.user,
+                        {
+                            "input": user_input,
+                            "result": results[0][0]
+                        }
+                    )
+
+                    st.info(
+                        "This is not a medical diagnosis. Consult a doctor."
+                    )
+
+            except Exception as e:
+                st.error("Prediction Error Occurred")
+                st.exception(e)
+
+    # ---------------- HISTORY ----------------
+    elif menu == "History":
+
+        st.title("📜 Prediction History")
+
+        history = get_history(st.session_state.user)
+
+        if history:
+
+            for item in history[::-1]:
+
+                st.markdown(f"""
+                <div class='result-card'>
+                    <h4>Symptoms:</h4>
+                    <p>{item['input']}</p>
+                    <h4>Prediction:</h4>
+                    <p>{item['result']}</p>
+                </div>
+                """, unsafe_allow_html=True)
+
+        else:
+            st.warning("No history available")
+
+    # ---------------- ABOUT ----------------
+    else:
+
+        st.title("ℹ️ About Project")
+
+        st.write("""
+        This project is an AI-based disease prediction system
+        developed using:
+
+        - Python
+        - Machine Learning
+        - Random Forest Algorithm
+        - Streamlit
+        - Rule-Based Filtering
+        - NLP-Based Symptom Extraction
+
+        Features:
+        - Real-time prediction
+        - Symptom analysis
+        - Exception handling
+        - Smart medical validation
+        - Prediction history
+        - Interactive UI
+        """)
