@@ -1,5 +1,4 @@
 import streamlit as st
-import os
 from auth import register, login, save_history, get_history
 
 # ---------------- PAGE CONFIG ----------------
@@ -27,7 +26,7 @@ st.markdown("""
 }
 
 .big-title {
-    font-size: 50px;
+    font-size: 52px;
     font-weight: bold;
     color: white;
 }
@@ -35,68 +34,191 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# ---------------- MEDICAL KEYWORDS ----------------
-MEDICAL_KEYWORDS = [
-    "fever", "cough", "cold", "headache", "vomiting", "nausea",
-    "body pain", "fatigue", "tired", "diarrhea", "loose motion",
-    "sore throat", "throat", "chills", "shiver", "runny nose",
-    "congestion", "sneezing", "dizziness", "stomach pain",
-    "bloating", "abdominal pain", "breathlessness", "rash",
-    "itching", "weakness", "chest pain", "constipation",
-    "acidity", "loss of taste", "joint pain"
+# ---------------- SYMPTOMS ----------------
+SYMPTOMS = [
+    "fever", "cough", "headache", "fatigue", "body pain",
+    "diarrhea", "vomiting", "sore throat", "chills",
+    "nausea", "runny nose", "congestion", "sneezing",
+    "dizziness", "stomach pain", "bloating",
+    "breathlessness", "rash", "itching",
+    "chest pain", "joint pain", "loss of taste",
+    "acidity", "constipation", "weakness",
+    "abdominal pain", "sweating", "eye redness",
+    "ear pain"
 ]
 
-# ---------------- SYMPTOM EXTRACTION ----------------
-def extract(text):
-
-    text = text.lower()
-
-    return [
-        int(any(x in text for x in ["fever", "temperature"])),
-        int(any(x in text for x in ["cough", "cold"])),
-        int("headache" in text),
-        int(any(x in text for x in ["fatigue", "tired"])),
-        int(any(x in text for x in ["body pain", "body ache"])),
-        int(any(x in text for x in ["diarrhea", "loose motion"])),
-        int(any(x in text for x in ["vomiting", "vomit"])),
-        int(any(x in text for x in ["sore throat", "throat"])),
-        int(any(x in text for x in ["chills", "shiver"])),
-        int("nausea" in text),
-        int(any(x in text for x in ["runny nose", "running nose"])),
-        int("congestion" in text),
-        int("sneezing" in text),
-        int("dizziness" in text),
-        int(any(x in text for x in ["stomach pain", "stomach ache"])),
-        int("bloating" in text),
-        int(any(x in text for x in ["breathlessness", "shortness of breath"])),
-        int(any(x in text for x in ["rash", "skin rash"])),
-        int("itching" in text),
-        int("chest pain" in text),
-        int("joint pain" in text),
-        int("loss of taste" in text),
-        int("acidity" in text),
-        int("constipation" in text),
-        int("weakness" in text),
-        int("abdominal pain" in text),
-        int("sweating" in text)
-    ]
-
-# ---------------- VALIDATION ----------------
+# ---------------- MEDICAL VALIDATION ----------------
 def is_medical_input(text):
 
     text = text.lower()
 
-    for word in MEDICAL_KEYWORDS:
-        if word in text:
+    for symptom in SYMPTOMS:
+        if symptom in text:
             return True
 
     return False
+
+# ---------------- FEATURE EXTRACTION ----------------
+def extract(text):
+
+    text = text.lower()
+
+    return {
+
+        "fever": any(x in text for x in ["fever", "temperature"]),
+        "cough": any(x in text for x in ["cough", "cold"]),
+        "headache": "headache" in text,
+        "fatigue": any(x in text for x in ["fatigue", "tired"]),
+        "body pain": any(x in text for x in ["body pain", "body ache"]),
+        "diarrhea": any(x in text for x in ["diarrhea", "loose motion"]),
+        "vomiting": any(x in text for x in ["vomiting", "vomit"]),
+        "sore throat": any(x in text for x in ["sore throat", "throat"]),
+        "chills": any(x in text for x in ["chills", "shiver"]),
+        "nausea": "nausea" in text,
+        "runny nose": any(x in text for x in ["runny nose", "running nose"]),
+        "congestion": "congestion" in text,
+        "sneezing": "sneezing" in text,
+        "dizziness": "dizziness" in text,
+        "stomach pain": any(x in text for x in ["stomach pain", "stomach ache"]),
+        "bloating": "bloating" in text,
+        "breathlessness": any(x in text for x in ["breathlessness", "shortness of breath"]),
+        "rash": any(x in text for x in ["rash", "skin rash"]),
+        "itching": "itching" in text,
+        "chest pain": "chest pain" in text,
+        "joint pain": "joint pain" in text,
+        "loss of taste": "loss of taste" in text,
+        "acidity": "acidity" in text,
+        "constipation": "constipation" in text,
+        "weakness": "weakness" in text,
+        "abdominal pain": "abdominal pain" in text,
+        "sweating": "sweating" in text,
+        "eye redness": any(x in text for x in ["eye redness", "red eyes"]),
+        "ear pain": "ear pain" in text
+    }
+
+# ---------------- DISEASE DATABASE ----------------
+DISEASES = {
+
+    "Flu": [
+        "fever", "cough", "body pain", "fatigue", "headache"
+    ],
+
+    "Common Cold": [
+        "cough", "runny nose", "sneezing", "congestion"
+    ],
+
+    "COVID-19": [
+        "fever", "cough", "loss of taste",
+        "breathlessness", "fatigue"
+    ],
+
+    "Typhoid": [
+        "fever", "abdominal pain", "weakness",
+        "headache", "sweating"
+    ],
+
+    "Dengue": [
+        "fever", "body pain", "headache",
+        "chills", "weakness"
+    ],
+
+    "Malaria": [
+        "fever", "chills", "sweating",
+        "dizziness", "fatigue"
+    ],
+
+    "Food Poisoning": [
+        "vomiting", "diarrhea", "stomach pain",
+        "nausea", "bloating"
+    ],
+
+    "Migraine": [
+        "headache", "dizziness", "nausea"
+    ],
+
+    "Asthma": [
+        "breathlessness", "cough", "chest pain"
+    ],
+
+    "Bronchitis": [
+        "cough", "chest pain", "sore throat"
+    ],
+
+    "Pneumonia": [
+        "fever", "cough", "breathlessness",
+        "chest pain"
+    ],
+
+    "Allergy": [
+        "rash", "itching", "sneezing",
+        "eye redness"
+    ],
+
+    "Sinusitis": [
+        "headache", "congestion", "runny nose"
+    ],
+
+    "Gastritis": [
+        "acidity", "stomach pain",
+        "bloating", "nausea"
+    ],
+
+    "Constipation": [
+        "constipation", "abdominal pain",
+        "bloating"
+    ],
+
+    "Arthritis": [
+        "joint pain", "body pain", "weakness"
+    ],
+
+    "Viral Fever": [
+        "fever", "fatigue", "headache"
+    ],
+
+    "Dehydration": [
+        "weakness", "dizziness", "fatigue"
+    ],
+
+    "Chickenpox": [
+        "fever", "rash", "itching"
+    ],
+
+    "Tuberculosis": [
+        "cough", "fever", "weakness",
+        "chest pain"
+    ]
+}
+
+# ---------------- PREDICTION ENGINE ----------------
+def predict_disease(features):
+
+    scores = {}
+
+    for disease, symptom_list in DISEASES.items():
+
+        score = 0
+
+        for symptom in symptom_list:
+
+            if features.get(symptom):
+                score += 1
+
+        scores[disease] = score
+
+    sorted_scores = sorted(
+        scores.items(),
+        key=lambda x: x[1],
+        reverse=True
+    )
+
+    return sorted_scores
 
 # ---------------- SESSION ----------------
 if "user" not in st.session_state:
     st.session_state.user = None
 
-# ---------------- LOGIN PAGE ----------------
+# ---------------- LOGIN ----------------
 if st.session_state.user is None:
 
     st.markdown(
@@ -106,10 +228,17 @@ if st.session_state.user is None:
 
     st.subheader("Login / Register")
 
-    mode = st.selectbox("Select Mode", ["Login", "Register"])
+    mode = st.selectbox(
+        "Select Mode",
+        ["Login", "Register"]
+    )
 
     username = st.text_input("Username")
-    password = st.text_input("Password", type="password")
+
+    password = st.text_input(
+        "Password",
+        type="password"
+    )
 
     if mode == "Register":
 
@@ -125,8 +254,10 @@ if st.session_state.user is None:
         if st.button("Login"):
 
             if login(username, password):
+
                 st.session_state.user = username
                 st.rerun()
+
             else:
                 st.error("Invalid username or password")
 
@@ -165,87 +296,54 @@ else:
 
                 # Invalid Input
                 elif not is_medical_input(user_input):
-                    st.error("Please enter valid medical symptoms.")
+                    st.error(
+                        "Please enter valid medical symptoms."
+                    )
 
                 else:
 
-                    f = extract(user_input)
+                    features = extract(user_input)
 
-                    # ---------------- SMART RULE PREDICTION ----------------
-
-                    prediction = "Unable to determine disease"
-
-                    # Flu
-                    if f[0] and f[1] and f[4]:
-                        prediction = "Flu"
-
-                    # Common Cold
-                    elif f[1] and f[10]:
-                        prediction = "Common Cold"
-
-                    # Food Poisoning
-                    elif f[5] and f[6] and f[14]:
-                        prediction = "Food Poisoning"
-
-                    # Typhoid
-                    elif f[0] and f[25] and f[24]:
-                        prediction = "Typhoid"
-
-                    # Migraine
-                    elif f[2] and f[13]:
-                        prediction = "Migraine"
-
-                    # Allergy
-                    elif f[17] or f[18] or f[12]:
-                        prediction = "Allergy"
-
-                    # Asthma
-                    elif f[16] and f[1]:
-                        prediction = "Asthma"
-
-                    # COVID-19
-                    elif f[0] and f[1] and f[21]:
-                        prediction = "COVID-19"
-
-                    # Gastritis
-                    elif f[14] and f[22]:
-                        prediction = "Gastritis"
-
-                    # Arthritis
-                    elif f[20] and f[4]:
-                        prediction = "Arthritis"
-
-                    # Dengue
-                    elif f[0] and f[8] and f[4]:
-                        prediction = "Dengue"
-
-                    # Malaria
-                    elif f[0] and f[8] and f[13]:
-                        prediction = "Malaria"
-
-                    # Viral Fever
-                    elif f[0] and f[1]:
-                        prediction = "Viral Fever"
-
-                    # Pneumonia
-                    elif f[0] and f[1] and f[16] and f[19]:
-                        prediction = "Pneumonia"
-
-                    # Bronchitis
-                    elif f[1] and f[7] and f[19]:
-                        prediction = "Bronchitis"
-
-                    # ---------------- OUTPUT ----------------
+                    predictions = predict_disease(features)
 
                     st.subheader("Prediction Result")
 
-                    st.markdown(f"""
-                    <div class='result-card'>
-                        <h2 style='color:#00ff99;'>
-                        {prediction}
-                        </h2>
-                    </div>
-                    """, unsafe_allow_html=True)
+                    top3 = predictions[:3]
+
+                    colors = [
+                        "#00ff99",
+                        "#facc15",
+                        "#ff4d4d"
+                    ]
+
+                    for i, (disease, score) in enumerate(top3):
+
+                        confidence = round(
+                            (score / 5) * 100,
+                            2
+                        )
+
+                        st.markdown(f"""
+                        <div class='result-card'>
+                            <h2 style='color:{colors[i]};'>
+                            {i+1}. {disease}
+                            </h2>
+
+                            <h4>
+                            Confidence: {confidence}%
+                            </h4>
+                        </div>
+                        """, unsafe_allow_html=True)
+
+                    # Emergency Detection
+                    if (
+                        features["chest pain"]
+                        and features["breathlessness"]
+                    ):
+
+                        st.error(
+                            "Emergency Warning: Seek medical attention immediately."
+                        )
 
                     st.info(
                         "This is not a medical diagnosis. Consult a doctor."
@@ -256,13 +354,16 @@ else:
                         st.session_state.user,
                         {
                             "input": user_input,
-                            "result": prediction
+                            "result": top3[0][0]
                         }
                     )
 
             except Exception as e:
 
-                st.error("Prediction Error Occurred")
+                st.error(
+                    "Prediction Error Occurred"
+                )
+
                 st.exception(e)
 
     # ---------------- HISTORY ----------------
@@ -270,7 +371,9 @@ else:
 
         st.title("📜 Prediction History")
 
-        history = get_history(st.session_state.user)
+        history = get_history(
+            st.session_state.user
+        )
 
         if history:
 
@@ -278,11 +381,13 @@ else:
 
                 st.markdown(f"""
                 <div class='result-card'>
+
                     <h4>Symptoms:</h4>
                     <p>{item['input']}</p>
 
                     <h4>Prediction:</h4>
                     <p>{item['result']}</p>
+
                 </div>
                 """, unsafe_allow_html=True)
 
@@ -294,22 +399,23 @@ else:
 
         st.title("ℹ️ About Project")
 
-        st.write("""
+        st.write(\"\"\"
         This project is an AI-based disease prediction system
         developed using:
 
         - Python
         - Streamlit
         - NLP-Based Symptom Extraction
-        - Rule-Based Disease Prediction
-        - Smart Medical Validation
+        - Hybrid Rule-Based Prediction
+        - Medical Validation
         - Exception Handling
 
         Features:
         - Real-time prediction
-        - Interactive UI
-        - Symptom analysis
-        - Medical validation
+        - 20+ disease support
+        - Smart symptom analysis
         - Prediction history
-        - Stable disease prediction
-        """)
+        - Emergency detection
+        - Interactive UI
+        - Top 3 disease prediction
+        \"\"\")
