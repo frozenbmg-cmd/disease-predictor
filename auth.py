@@ -1,40 +1,60 @@
 import json
 import os
 
-FILE = "users.json"
+USERS_FILE = "users.json"
+HISTORY_FILE = "history.json"
 
-def load_users():
-    if not os.path.exists(FILE):
-        return {}
-    with open(FILE, "r") as f:
-        return json.load(f)
+# ---------------- CREATE FILES ----------------
+if not os.path.exists(USERS_FILE):
+    with open(USERS_FILE, "w") as f:
+        json.dump({}, f)
 
-def save_users(users):
-    with open(FILE, "w") as f:
-        json.dump(users, f)
+if not os.path.exists(HISTORY_FILE):
+    with open(HISTORY_FILE, "w") as f:
+        json.dump({}, f)
 
+# ---------------- REGISTER ----------------
 def register(username, password):
-    users = load_users()
+
+    with open(USERS_FILE, "r") as f:
+        users = json.load(f)
+
     if username in users:
         return False
 
-    users[username] = {
-        "password": password,
-        "history": []
-    }
+    users[username] = password
 
-    save_users(users)
+    with open(USERS_FILE, "w") as f:
+        json.dump(users, f)
+
     return True
 
+# ---------------- LOGIN ----------------
 def login(username, password):
-    users = load_users()
-    return username in users and users[username]["password"] == password
 
+    with open(USERS_FILE, "r") as f:
+        users = json.load(f)
+
+    return users.get(username) == password
+
+# ---------------- SAVE HISTORY ----------------
 def save_history(username, data):
-    users = load_users()
-    users[username]["history"].append(data)
-    save_users(users)
 
+    with open(HISTORY_FILE, "r") as f:
+        history = json.load(f)
+
+    if username not in history:
+        history[username] = []
+
+    history[username].append(data)
+
+    with open(HISTORY_FILE, "w") as f:
+        json.dump(history, f)
+
+# ---------------- GET HISTORY ----------------
 def get_history(username):
-    users = load_users()
-    return users[username]["history"]
+
+    with open(HISTORY_FILE, "r") as f:
+        history = json.load(f)
+
+    return history.get(username, [])
