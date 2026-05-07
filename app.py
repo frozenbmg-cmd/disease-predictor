@@ -376,15 +376,11 @@ else:
 
             try:
 
-                # Empty Input
                 if user_input.strip() == "":
                     st.warning("Please enter symptoms.")
 
-                # Invalid Input
                 elif not is_medical_input(user_input):
-                    st.error(
-                        "Please enter valid medical symptoms."
-                    )
+                    st.error("Please enter valid medical symptoms.")
 
                 else:
 
@@ -406,13 +402,15 @@ else:
 
                         st.markdown(f"""
                         <div class='result-card'>
+
                             <h2 style='color:{colors[i]};'>
                             {i+1}. {disease}
                             </h2>
 
-                            <h4>
+                            <p style='font-size:22px; color:white;'>
                             Confidence: {confidence}%
-                            </h4>
+                            </p>
+
                         </div>
                         """, unsafe_allow_html=True)
 
@@ -430,7 +428,6 @@ else:
                         "This is not a medical diagnosis. Consult a doctor."
                     )
 
-                    # Save History
                     save_history(
                         st.session_state.user,
                         {
@@ -441,10 +438,7 @@ else:
 
             except Exception as e:
 
-                st.error(
-                    "Prediction Error Occurred"
-                )
-
+                st.error("Prediction Error Occurred")
                 st.exception(e)
 
     # ---------------- HISTORY ----------------
