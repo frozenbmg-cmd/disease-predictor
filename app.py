@@ -105,40 +105,38 @@ def is_medical_input(text):
 # ---------------- RULE FILTER ----------------
 def rule_filter(results, f):
 
-    (
-        fever, cough, headache, fatigue, body_pain,
-        diarrhea, vomiting, throat, chills, nausea,
-        runny_nose, congestion, sneezing, dizziness,
-        stomach_pain, bloating, breathlessness,
-        rash, itching, chest_pain, anxiety
-    ) = f
-
     filtered = []
 
     for d, p in results:
 
-        if d == "Food Poisoning" and diarrhea == 0 and vomiting == 0:
-            continue
+        # Food Poisoning
+        if d == "Food Poisoning":
+            if f[5] == 0 and f[6] == 0:
+                continue
 
-        if d == "Flu" and fever == 0:
-            continue
+        # Typhoid
+        if d == "Typhoid":
+            if f[0] == 0 or f[28] == 0:
+                continue
 
-        if d == "Common Cold" and cough == 0 and runny_nose == 0:
-            continue
+        # Allergy
+        if d == "Allergy":
+            if f[17] == 0 and f[18] == 0 and f[12] == 0:
+                continue
 
-        if d == "Malaria" and fever == 0:
-            continue
+        # Asthma
+        if d == "Asthma":
+            if f[16] == 0:
+                continue
 
-        if d == "Dengue" and fever == 0:
-            continue
-
-        if d == "Asthma" and breathlessness == 0:
-            continue
+        # Migraine
+        if d == "Migraine":
+            if f[2] == 0:
+                continue
 
         filtered.append((d, p))
 
     return filtered if filtered else results
-
 # ---------------- SESSION ----------------
 if "user" not in st.session_state:
     st.session_state.user = None
