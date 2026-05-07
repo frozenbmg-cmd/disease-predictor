@@ -1,6 +1,5 @@
 import streamlit as st
 import os
-from model import train_and_save, load_model
 from auth import register, login, save_history, get_history
 
 # ---------------- PAGE CONFIG ----------------
@@ -36,12 +35,6 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# ---------------- TRAIN MODEL ----------------
-if not os.path.exists("model.pkl"):
-    train_and_save()
-
-model = load_model()
-
 # ---------------- MEDICAL KEYWORDS ----------------
 MEDICAL_KEYWORDS = [
     "fever", "cough", "cold", "headache", "vomiting", "nausea",
@@ -50,7 +43,7 @@ MEDICAL_KEYWORDS = [
     "congestion", "sneezing", "dizziness", "stomach pain",
     "bloating", "abdominal pain", "breathlessness", "rash",
     "itching", "weakness", "chest pain", "constipation",
-    "acidity", "loss of taste", "joint pain", "anxiety"
+    "acidity", "loss of taste", "joint pain"
 ]
 
 # ---------------- SYMPTOM EXTRACTION ----------------
@@ -79,11 +72,8 @@ def extract(text):
         int(any(x in text for x in ["rash", "skin rash"])),
         int("itching" in text),
         int("chest pain" in text),
-        int(any(x in text for x in ["anxiety", "stress"])),
         int("joint pain" in text),
         int("loss of taste" in text),
-        int(any(x in text for x in ["eye redness", "red eyes"])),
-        int("ear pain" in text),
         int("acidity" in text),
         int("constipation" in text),
         int("weakness" in text),
@@ -102,41 +92,6 @@ def is_medical_input(text):
 
     return False
 
-# ---------------- RULE FILTER ----------------
-def rule_filter(results, f):
-
-    filtered = []
-
-    for d, p in results:
-
-        # Food Poisoning
-        if d == "Food Poisoning":
-            if f[5] == 0 and f[6] == 0:
-                continue
-
-        # Typhoid
-        if d == "Typhoid":
-            if f[0] == 0 or f[28] == 0:
-                continue
-
-        # Allergy
-        if d == "Allergy":
-            if f[17] == 0 and f[18] == 0 and f[12] == 0:
-                continue
-
-        # Asthma
-        if d == "Asthma":
-            if f[16] == 0:
-                continue
-
-        # Migraine
-        if d == "Migraine":
-            if f[2] == 0:
-                continue
-
-        filtered.append((d, p))
-
-    return filtered if filtered else results
 # ---------------- SESSION ----------------
 if "user" not in st.session_state:
     st.session_state.user = None
@@ -214,48 +169,95 @@ else:
 
                 else:
 
-                    # Feature Extraction
                     f = extract(user_input)
 
-                    # Prediction
-                    probs = model.predict_proba([f])[0]
-                    diseases = model.classes_
+                    # ---------------- SMART RULE PREDICTION ----------------
 
-                    results = list(zip(diseases, probs))
+                    prediction = "Unable to determine disease"
 
-                    # Sort
-                    results.sort(key=lambda x: x[1], reverse=True)
+                    # Flu
+                    if f[0] and f[1] and f[4]:
+                        prediction = "Flu"
 
-                    # Filter
-                    results = rule_filter(results, f)
+                    # Common Cold
+                    elif f[1] and f[10]:
+                        prediction = "Common Cold"
+
+                    # Food Poisoning
+                    elif f[5] and f[6] and f[14]:
+                        prediction = "Food Poisoning"
+
+                    # Typhoid
+                    elif f[0] and f[25] and f[24]:
+                        prediction = "Typhoid"
+
+                    # Migraine
+                    elif f[2] and f[13]:
+                        prediction = "Migraine"
+
+                    # Allergy
+                    elif f[17] or f[18] or f[12]:
+                        prediction = "Allergy"
+
+                    # Asthma
+                    elif f[16] and f[1]:
+                        prediction = "Asthma"
+
+                    # COVID-19
+                    elif f[0] and f[1] and f[21]:
+                        prediction = "COVID-19"
+
+                    # Gastritis
+                    elif f[14] and f[22]:
+                        prediction = "Gastritis"
+
+                    # Arthritis
+                    elif f[20] and f[4]:
+                        prediction = "Arthritis"
+
+                    # Dengue
+                    elif f[0] and f[8] and f[4]:
+                        prediction = "Dengue"
+
+                    # Malaria
+                    elif f[0] and f[8] and f[13]:
+                        prediction = "Malaria"
+
+                    # Viral Fever
+                    elif f[0] and f[1]:
+                        prediction = "Viral Fever"
+
+                    # Pneumonia
+                    elif f[0] and f[1] and f[16] and f[19]:
+                        prediction = "Pneumonia"
+
+                    # Bronchitis
+                    elif f[1] and f[7] and f[19]:
+                        prediction = "Bronchitis"
+
+                    # ---------------- OUTPUT ----------------
 
                     st.subheader("Prediction Result")
 
-                    colors = ["#00ff99", "#facc15", "#ff4d4d"]
+                    st.markdown(f"""
+                    <div class='result-card'>
+                        <h2 style='color:#00ff99;'>
+                        {prediction}
+                        </h2>
+                    </div>
+                    """, unsafe_allow_html=True)
 
-                    # Display Top 3
-                    for i, (d, p) in enumerate(results[:3]):
-
-                        st.markdown(f"""
-                        <div class='result-card'>
-                            <h2 style='color:{colors[i]};'>
-                            {i+1}. {d}
-                            </h2>
-                            <h4>Confidence: {round(p*100,2)}%</h4>
-                        </div>
-                        """, unsafe_allow_html=True)
+                    st.info(
+                        "This is not a medical diagnosis. Consult a doctor."
+                    )
 
                     # Save History
                     save_history(
                         st.session_state.user,
                         {
                             "input": user_input,
-                            "result": results[0][0]
+                            "result": prediction
                         }
-                    )
-
-                    st.info(
-                        "This is not a medical diagnosis. Consult a doctor."
                     )
 
             except Exception as e:
@@ -297,17 +299,17 @@ else:
         developed using:
 
         - Python
-        - Machine Learning
-        - Random Forest Algorithm
         - Streamlit
-        - Rule-Based Filtering
         - NLP-Based Symptom Extraction
+        - Rule-Based Disease Prediction
+        - Smart Medical Validation
+        - Exception Handling
 
         Features:
         - Real-time prediction
-        - Symptom analysis
-        - Exception handling
-        - Smart medical validation
-        - Prediction history
         - Interactive UI
+        - Symptom analysis
+        - Medical validation
+        - Prediction history
+        - Stable disease prediction
         """)
