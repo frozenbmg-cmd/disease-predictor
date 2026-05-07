@@ -50,7 +50,7 @@ MEDICAL_KEYWORDS = [
     "congestion", "sneezing", "dizziness", "stomach pain",
     "bloating", "abdominal pain", "breathlessness", "rash",
     "itching", "weakness", "chest pain", "constipation",
-    "acidity", "loss of taste", "joint pain"
+    "acidity", "loss of taste", "joint pain", "anxiety"
 ]
 
 # ---------------- SYMPTOM EXTRACTION ----------------
@@ -98,8 +98,9 @@ def extract(text):
 
         int("itching" in text),
 
-        int("chest pain" in text)
+        int("chest pain" in text),
 
+        int(any(x in text for x in ["anxiety", "stress"]))
     ]
 
 # ---------------- VALIDATION ----------------
@@ -121,7 +122,7 @@ def rule_filter(results, f):
         diarrhea, vomiting, throat, chills, nausea,
         runny_nose, congestion, sneezing, dizziness,
         stomach_pain, bloating, breathlessness,
-        rash, itching, chest_pain
+        rash, itching, chest_pain, anxiety
     ) = f
 
     filtered = []
@@ -217,28 +218,36 @@ else:
 
             try:
 
+                # Empty Input
                 if user_input.strip() == "":
                     st.warning("Please enter symptoms.")
 
+                # Invalid Input
                 elif not is_medical_input(user_input):
                     st.error("Please enter valid medical symptoms.")
 
                 else:
 
+                    # Feature Extraction
                     f = extract(user_input)
 
+                    # Prediction
                     probs = model.predict_proba([f])[0]
                     diseases = model.classes_
 
                     results = list(zip(diseases, probs))
+
+                    # Sort
                     results.sort(key=lambda x: x[1], reverse=True)
 
+                    # Filter
                     results = rule_filter(results, f)
 
                     st.subheader("Prediction Result")
 
                     colors = ["#00ff99", "#facc15", "#ff4d4d"]
 
+                    # Display Top 3
                     for i, (d, p) in enumerate(results[:3]):
 
                         st.markdown(f"""
@@ -250,6 +259,7 @@ else:
                         </div>
                         """, unsafe_allow_html=True)
 
+                    # Save History
                     save_history(
                         st.session_state.user,
                         {
@@ -263,6 +273,7 @@ else:
                     )
 
             except Exception as e:
+
                 st.error("Prediction Error Occurred")
                 st.exception(e)
 
@@ -281,6 +292,7 @@ else:
                 <div class='result-card'>
                     <h4>Symptoms:</h4>
                     <p>{item['input']}</p>
+
                     <h4>Prediction:</h4>
                     <p>{item['result']}</p>
                 </div>
