@@ -96,129 +96,215 @@ def extract(text):
         "ear pain": "ear pain" in text
     }
 
-# ---------------- DISEASE DATABASE ----------------
-DISEASES = {
-
-    "Flu": [
-        "fever", "cough", "body pain", "fatigue", "headache"
-    ],
-
-    "Common Cold": [
-        "cough", "runny nose", "sneezing", "congestion"
-    ],
-
-    "COVID-19": [
-        "fever", "cough", "loss of taste",
-        "breathlessness", "fatigue"
-    ],
-
-    "Typhoid": [
-        "fever", "abdominal pain", "weakness",
-        "headache", "sweating"
-    ],
-
-    "Dengue": [
-        "fever", "body pain", "headache",
-        "chills", "weakness"
-    ],
-
-    "Malaria": [
-        "fever", "chills", "sweating",
-        "dizziness", "fatigue"
-    ],
-
-    "Food Poisoning": [
-        "vomiting", "diarrhea", "stomach pain",
-        "nausea", "bloating"
-    ],
-
-    "Migraine": [
-        "headache", "dizziness", "nausea"
-    ],
-
-    "Asthma": [
-        "breathlessness", "cough", "chest pain"
-    ],
-
-    "Bronchitis": [
-        "cough", "chest pain", "sore throat"
-    ],
-
-    "Pneumonia": [
-        "fever", "cough", "breathlessness",
-        "chest pain"
-    ],
-
-    "Allergy": [
-        "rash", "itching", "sneezing",
-        "eye redness"
-    ],
-
-    "Sinusitis": [
-        "headache", "congestion", "runny nose"
-    ],
-
-    "Gastritis": [
-        "acidity", "stomach pain",
-        "bloating", "nausea"
-    ],
-
-    "Constipation": [
-        "constipation", "abdominal pain",
-        "bloating"
-    ],
-
-    "Arthritis": [
-        "joint pain", "body pain", "weakness"
-    ],
-
-    "Viral Fever": [
-        "fever", "fatigue", "headache"
-    ],
-
-    "Dehydration": [
-        "weakness", "dizziness", "fatigue"
-    ],
-
-    "Chickenpox": [
-        "fever", "rash", "itching"
-    ],
-
-    "Tuberculosis": [
-        "cough", "fever", "weakness",
-        "chest pain"
-    ]
-}
-
-# ---------------- PREDICTION ENGINE ----------------
+# ---------------- ADVANCED PREDICTION ENGINE ----------------
 def predict_disease(features):
 
-    scores = {}
+    disease_data = {
 
-    for disease, symptom_list in DISEASES.items():
+        "Flu": {
+            "symptoms": {
+                "fever": 3,
+                "cough": 3,
+                "body pain": 2,
+                "fatigue": 2,
+                "headache": 1
+            }
+        },
+
+        "Common Cold": {
+            "symptoms": {
+                "cough": 3,
+                "runny nose": 3,
+                "sneezing": 2,
+                "congestion": 2
+            }
+        },
+
+        "COVID-19": {
+            "symptoms": {
+                "fever": 3,
+                "cough": 3,
+                "loss of taste": 4,
+                "breathlessness": 3,
+                "fatigue": 2
+            }
+        },
+
+        "Typhoid": {
+            "symptoms": {
+                "fever": 3,
+                "abdominal pain": 3,
+                "weakness": 2,
+                "headache": 1,
+                "sweating": 2
+            }
+        },
+
+        "Dengue": {
+            "symptoms": {
+                "fever": 3,
+                "body pain": 3,
+                "headache": 2,
+                "chills": 2,
+                "weakness": 2
+            }
+        },
+
+        "Malaria": {
+            "symptoms": {
+                "fever": 3,
+                "chills": 3,
+                "sweating": 3,
+                "dizziness": 2,
+                "fatigue": 2
+            }
+        },
+
+        "Food Poisoning": {
+            "symptoms": {
+                "vomiting": 4,
+                "diarrhea": 4,
+                "stomach pain": 3,
+                "nausea": 2,
+                "bloating": 1
+            }
+        },
+
+        "Migraine": {
+            "symptoms": {
+                "headache": 4,
+                "dizziness": 2,
+                "nausea": 2
+            }
+        },
+
+        "Asthma": {
+            "symptoms": {
+                "breathlessness": 4,
+                "cough": 2,
+                "chest pain": 2
+            }
+        },
+
+        "Pneumonia": {
+            "symptoms": {
+                "fever": 3,
+                "cough": 3,
+                "breathlessness": 3,
+                "chest pain": 2
+            }
+        },
+
+        "Allergy": {
+            "symptoms": {
+                "rash": 3,
+                "itching": 3,
+                "sneezing": 2,
+                "eye redness": 2
+            }
+        },
+
+        "Sinusitis": {
+            "symptoms": {
+                "headache": 3,
+                "congestion": 3,
+                "runny nose": 2
+            }
+        },
+
+        "Gastritis": {
+            "symptoms": {
+                "acidity": 4,
+                "stomach pain": 3,
+                "bloating": 2,
+                "nausea": 1
+            }
+        },
+
+        "Constipation": {
+            "symptoms": {
+                "constipation": 4,
+                "abdominal pain": 2,
+                "bloating": 2
+            }
+        },
+
+        "Arthritis": {
+            "symptoms": {
+                "joint pain": 4,
+                "body pain": 2,
+                "weakness": 1
+            }
+        },
+
+        "Viral Fever": {
+            "symptoms": {
+                "fever": 3,
+                "fatigue": 2,
+                "headache": 2
+            }
+        },
+
+        "Dehydration": {
+            "symptoms": {
+                "weakness": 3,
+                "dizziness": 3,
+                "fatigue": 2
+            }
+        },
+
+        "Chickenpox": {
+            "symptoms": {
+                "fever": 2,
+                "rash": 4,
+                "itching": 3
+            }
+        },
+
+        "Tuberculosis": {
+            "symptoms": {
+                "cough": 3,
+                "fever": 2,
+                "weakness": 3,
+                "chest pain": 2
+            }
+        }
+    }
+
+    results = []
+
+    for disease, data in disease_data.items():
 
         score = 0
+        total_possible = 0
 
-        for symptom in symptom_list:
+        for symptom, weight in data["symptoms"].items():
+
+            total_possible += weight
 
             if features.get(symptom):
-                score += 1
+                score += weight
 
-        scores[disease] = score
+        confidence = round(
+            (score / total_possible) * 100,
+            2
+        )
 
-    sorted_scores = sorted(
-        scores.items(),
+        if confidence > 0:
+            results.append((disease, confidence))
+
+    results.sort(
         key=lambda x: x[1],
         reverse=True
     )
 
-    return sorted_scores
+    return results
 
 # ---------------- SESSION ----------------
 if "user" not in st.session_state:
     st.session_state.user = None
 
-# ---------------- LOGIN ----------------
+# ---------------- LOGIN PAGE ----------------
 if st.session_state.user is None:
 
     st.markdown(
@@ -316,12 +402,7 @@ else:
                         "#ff4d4d"
                     ]
 
-                    for i, (disease, score) in enumerate(top3):
-
-                        confidence = round(
-                            (score / 5) * 100,
-                            2
-                        )
+                    for i, (disease, confidence) in enumerate(top3):
 
                         st.markdown(f"""
                         <div class='result-card'>
@@ -399,7 +480,7 @@ else:
 
         st.title("ℹ️ About Project")
 
-        st.write(\"\"\"
+        st.write("""
         This project is an AI-based disease prediction system
         developed using:
 
@@ -418,4 +499,4 @@ else:
         - Emergency detection
         - Interactive UI
         - Top 3 disease prediction
-        \"\"\")
+        """)
