@@ -59,48 +59,36 @@ def extract(text):
     text = text.lower()
 
     return [
-
         int(any(x in text for x in ["fever", "temperature"])),
-
         int(any(x in text for x in ["cough", "cold"])),
-
         int("headache" in text),
-
-        int(any(x in text for x in ["fatigue", "tired", "weak"])),
-
+        int(any(x in text for x in ["fatigue", "tired"])),
         int(any(x in text for x in ["body pain", "body ache"])),
-
         int(any(x in text for x in ["diarrhea", "loose motion"])),
-
-        int("vomiting" in text),
-
+        int(any(x in text for x in ["vomiting", "vomit"])),
         int(any(x in text for x in ["sore throat", "throat"])),
-
         int(any(x in text for x in ["chills", "shiver"])),
-
         int("nausea" in text),
-
         int(any(x in text for x in ["runny nose", "running nose"])),
-
         int("congestion" in text),
-
         int("sneezing" in text),
-
         int("dizziness" in text),
-
-        int(any(x in text for x in ["stomach pain", "abdominal pain"])),
-
+        int(any(x in text for x in ["stomach pain", "stomach ache"])),
         int("bloating" in text),
-
         int(any(x in text for x in ["breathlessness", "shortness of breath"])),
-
         int(any(x in text for x in ["rash", "skin rash"])),
-
         int("itching" in text),
-
         int("chest pain" in text),
-
-        int(any(x in text for x in ["anxiety", "stress"]))
+        int(any(x in text for x in ["anxiety", "stress"])),
+        int("joint pain" in text),
+        int("loss of taste" in text),
+        int(any(x in text for x in ["eye redness", "red eyes"])),
+        int("ear pain" in text),
+        int("acidity" in text),
+        int("constipation" in text),
+        int("weakness" in text),
+        int("abdominal pain" in text),
+        int("sweating" in text)
     ]
 
 # ---------------- VALIDATION ----------------
