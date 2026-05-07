@@ -1,50 +1,54 @@
 import streamlit as st
 from auth import register, login, save_history, get_history
 
-# ---------------- PAGE CONFIG ----------------
+# ---------------- PAGE ----------------
 st.set_page_config(
     page_title="AI Health Assistant",
     page_icon="🩺",
     layout="wide"
 )
 
-# ---------------- CUSTOM CSS ----------------
+# ---------------- STYLE ----------------
 st.markdown("""
 <style>
-
 .stApp {
     background-color: #050816;
     color: white;
 }
-
-.result-card {
-    background-color: #121a2b;
-    padding: 20px;
-    border-radius: 15px;
-    margin-bottom: 15px;
-    border-left: 5px solid #00ff99;
-    box-shadow: 0px 0px 10px rgba(0,255,153,0.2);
-}
-
-.big-title {
-    font-size: 52px;
-    font-weight: bold;
-    color: white;
-}
-
 </style>
 """, unsafe_allow_html=True)
 
 # ---------------- SYMPTOMS ----------------
 SYMPTOMS = [
-    "fever", "cough", "headache", "fatigue", "body pain",
-    "diarrhea", "vomiting", "sore throat", "chills",
-    "nausea", "runny nose", "congestion", "sneezing",
-    "dizziness", "stomach pain", "bloating",
-    "breathlessness", "rash", "itching",
-    "chest pain", "joint pain", "loss of taste",
-    "acidity", "constipation", "weakness",
-    "abdominal pain", "sweating", "eye redness",
+    "fever",
+    "cough",
+    "headache",
+    "fatigue",
+    "body pain",
+    "diarrhea",
+    "vomiting",
+    "sore throat",
+    "chills",
+    "nausea",
+    "runny nose",
+    "running nose",
+    "congestion",
+    "sneezing",
+    "dizziness",
+    "stomach pain",
+    "bloating",
+    "breathlessness",
+    "rash",
+    "itching",
+    "chest pain",
+    "joint pain",
+    "loss of taste",
+    "acidity",
+    "constipation",
+    "weakness",
+    "abdominal pain",
+    "sweating",
+    "eye redness",
     "ear pain"
 ]
 
@@ -66,177 +70,169 @@ def extract(text):
 
     return {
 
-        "fever": any(x in text for x in ["fever", "temperature"]),
-        "cough": any(x in text for x in ["cough", "cold"]),
+        "fever": "fever" in text,
+
+        "cough": "cough" in text,
+
         "headache": "headache" in text,
-        "fatigue": any(x in text for x in ["fatigue", "tired"]),
-        "body pain": any(x in text for x in ["body pain", "body ache"]),
-        "diarrhea": any(x in text for x in ["diarrhea", "loose motion"]),
-        "vomiting": any(x in text for x in ["vomiting", "vomit"]),
-        "sore throat": any(x in text for x in ["sore throat", "throat"]),
-        "chills": any(x in text for x in ["chills", "shiver"]),
+
+        "fatigue": any(
+            x in text for x in ["fatigue", "tired"]
+        ),
+
+        "body pain": any(
+            x in text for x in ["body pain", "body ache"]
+        ),
+
+        "diarrhea": any(
+            x in text for x in ["diarrhea", "loose motion"]
+        ),
+
+        "vomiting": any(
+            x in text for x in ["vomiting", "vomit"]
+        ),
+
+        "sore throat": "sore throat" in text,
+
+        "chills": "chills" in text,
+
         "nausea": "nausea" in text,
-        "runny nose": any(x in text for x in ["runny nose", "running nose"]),
+
+        "runny nose": any(
+            x in text for x in [
+                "runny nose",
+                "running nose"
+            ]
+        ),
+
         "congestion": "congestion" in text,
+
         "sneezing": "sneezing" in text,
+
         "dizziness": "dizziness" in text,
-        "stomach pain": any(x in text for x in ["stomach pain", "stomach ache"]),
+
+        "stomach pain": any(
+            x in text for x in [
+                "stomach pain",
+                "stomach ache"
+            ]
+        ),
+
         "bloating": "bloating" in text,
-        "breathlessness": any(x in text for x in ["breathlessness", "shortness of breath"]),
-        "rash": any(x in text for x in ["rash", "skin rash"]),
+
+        "breathlessness": any(
+            x in text for x in [
+                "breathlessness",
+                "shortness of breath"
+            ]
+        ),
+
+        "rash": "rash" in text,
+
         "itching": "itching" in text,
+
         "chest pain": "chest pain" in text,
+
         "joint pain": "joint pain" in text,
+
         "loss of taste": "loss of taste" in text,
+
         "acidity": "acidity" in text,
+
         "constipation": "constipation" in text,
+
         "weakness": "weakness" in text,
+
         "abdominal pain": "abdominal pain" in text,
+
         "sweating": "sweating" in text,
-        "eye redness": any(x in text for x in ["eye redness", "red eyes"]),
+
+        "eye redness": any(
+            x in text for x in [
+                "eye redness",
+                "red eyes"
+            ]
+        ),
+
         "ear pain": "ear pain" in text
     }
 
-# ---------------- PREDICTION ENGINE ----------------
-def predict_disease(features):
+# ---------------- DISEASE DATABASE ----------------
+DISEASES = {
 
-    disease_data = {
+    "Flu": {
+        "fever": 3,
+        "cough": 3,
+        "body pain": 2,
+        "fatigue": 2,
+        "headache": 1
+    },
 
-        "Flu": {
-            "fever": 3,
-            "cough": 3,
-            "body pain": 2,
-            "fatigue": 2,
-            "headache": 1
-        },
+    "Common Cold": {
+        "cough": 3,
+        "runny nose": 4,
+        "sneezing": 3,
+        "congestion": 2
+    },
 
-        "Common Cold": {
-            "cough": 3,
-            "runny nose": 3,
-            "sneezing": 2,
-            "congestion": 2
-        },
+    "COVID-19": {
+        "fever": 3,
+        "cough": 3,
+        "loss of taste": 5,
+        "breathlessness": 3
+    },
 
-        "COVID-19": {
-            "fever": 3,
-            "cough": 3,
-            "loss of taste": 4,
-            "breathlessness": 3,
-            "fatigue": 2
-        },
+    "Dengue": {
+        "fever": 4,
+        "body pain": 4,
+        "headache": 2,
+        "chills": 2
+    },
 
-        "Typhoid": {
-            "fever": 3,
-            "abdominal pain": 3,
-            "weakness": 2,
-            "headache": 1,
-            "sweating": 2
-        },
+    "Typhoid": {
+        "fever": 4,
+        "weakness": 2,
+        "abdominal pain": 3
+    },
 
-        "Dengue": {
-            "fever": 3,
-            "body pain": 3,
-            "headache": 2,
-            "chills": 2,
-            "weakness": 2
-        },
+    "Food Poisoning": {
+        "vomiting": 5,
+        "diarrhea": 5,
+        "stomach pain": 4,
+        "nausea": 3
+    },
 
-        "Malaria": {
-            "fever": 3,
-            "chills": 3,
-            "sweating": 3,
-            "dizziness": 2,
-            "fatigue": 2
-        },
+    "Migraine": {
+        "headache": 5,
+        "dizziness": 3,
+        "nausea": 2
+    },
 
-        "Food Poisoning": {
-            "vomiting": 4,
-            "diarrhea": 4,
-            "stomach pain": 3,
-            "nausea": 2,
-            "bloating": 1
-        },
+    "Asthma": {
+        "breathlessness": 5,
+        "cough": 2,
+        "chest pain": 2
+    },
 
-        "Migraine": {
-            "headache": 4,
-            "dizziness": 2,
-            "nausea": 2
-        },
+    "Allergy": {
+        "rash": 4,
+        "itching": 4,
+        "sneezing": 2
+    },
 
-        "Asthma": {
-            "breathlessness": 4,
-            "cough": 2,
-            "chest pain": 2
-        },
-
-        "Pneumonia": {
-            "fever": 3,
-            "cough": 3,
-            "breathlessness": 3,
-            "chest pain": 2
-        },
-
-        "Allergy": {
-            "rash": 3,
-            "itching": 3,
-            "sneezing": 2,
-            "eye redness": 2
-        },
-
-        "Sinusitis": {
-            "headache": 3,
-            "congestion": 3,
-            "runny nose": 2
-        },
-
-        "Gastritis": {
-            "acidity": 4,
-            "stomach pain": 3,
-            "bloating": 2,
-            "nausea": 1
-        },
-
-        "Constipation": {
-            "constipation": 4,
-            "abdominal pain": 2,
-            "bloating": 2
-        },
-
-        "Arthritis": {
-            "joint pain": 4,
-            "body pain": 2,
-            "weakness": 1
-        },
-
-        "Viral Fever": {
-            "fever": 3,
-            "fatigue": 2,
-            "headache": 2
-        },
-
-        "Dehydration": {
-            "weakness": 3,
-            "dizziness": 3,
-            "fatigue": 2
-        },
-
-        "Chickenpox": {
-            "fever": 2,
-            "rash": 4,
-            "itching": 3
-        },
-
-        "Tuberculosis": {
-            "cough": 3,
-            "fever": 2,
-            "weakness": 3,
-            "chest pain": 2
-        }
+    "Gastritis": {
+        "acidity": 5,
+        "stomach pain": 3,
+        "bloating": 2
     }
+}
+
+# ---------------- PREDICTION ----------------
+def predict_disease(features):
 
     results = []
 
-    for disease, symptoms in disease_data.items():
+    for disease, symptoms in DISEASES.items():
 
         score = 0
         total = 0
@@ -248,7 +244,10 @@ def predict_disease(features):
             if features.get(symptom):
                 score += weight
 
-        confidence = round((score / total) * 100, 2)
+        confidence = round(
+            (score / total) * 100,
+            2
+        )
 
         if confidence > 0:
             results.append((disease, confidence))
@@ -264,15 +263,10 @@ def predict_disease(features):
 if "user" not in st.session_state:
     st.session_state.user = None
 
-# ---------------- LOGIN PAGE ----------------
+# ---------------- LOGIN ----------------
 if st.session_state.user is None:
 
-    st.markdown(
-        "<h1 class='big-title'>🩺 AI Health Assistant</h1>",
-        unsafe_allow_html=True
-    )
-
-    st.subheader("Login / Register")
+    st.title("🩺 AI Health Assistant")
 
     mode = st.selectbox(
         "Select Mode",
@@ -292,6 +286,7 @@ if st.session_state.user is None:
 
             if register(username, password):
                 st.success("Registration Successful")
+
             else:
                 st.error("Username already exists")
 
@@ -320,114 +315,93 @@ else:
     # ---------------- CHAT ----------------
     if menu == "Chat":
 
-        st.markdown(
-            "<h1 class='big-title'>AI Health Assistant</h1>",
-            unsafe_allow_html=True
+        st.title("AI Health Assistant")
+
+        st.write(
+            "Enter symptoms separated by commas"
         )
 
-        st.write("Enter symptoms separated by commas")
-
         user_input = st.text_input(
-            "Enter symptoms",
-            placeholder="Example: fever, cough, headache"
+            "Enter symptoms"
         )
 
         if st.button("Predict"):
 
-            try:
+            if user_input.strip() == "":
 
-                if user_input.strip() == "":
-                    st.warning("Please enter symptoms.")
+                st.warning(
+                    "Please enter symptoms."
+                )
 
-                elif not is_medical_input(user_input):
-                    st.error("Please enter valid medical symptoms.")
+            elif not is_medical_input(user_input):
 
-                else:
+                st.error(
+                    "Please enter valid medical symptoms."
+                )
 
-                    features = extract(user_input)
+            else:
 
-                    predictions = predict_disease(features)
+                features = extract(user_input)
 
-                    st.subheader("Prediction Result")
+                predictions = predict_disease(features)
 
-                    top3 = predictions[:3]
+                st.subheader("Prediction Result")
 
-                    colors = [
-                        "#00ff99",
-                        "#facc15",
-                        "#ff4d4d"
-                    ]
+                top3 = predictions[:3]
 
-                    for i, (disease, confidence) in enumerate(top3):
+                for i, (disease, confidence) in enumerate(top3):
 
-                        card_html = f"""
-                        <div class='result-card'>
-
-                            <h2 style="color:{colors[i]};">
-                                {i+1}. {disease}
-                            </h2>
-
-                            <p style="font-size:22px; color:white;">
-                                Confidence: {confidence}%
-                            </p>
-
-                        </div>
-                        """
-
-                        st.markdown(
-                            card_html,
-                            unsafe_allow_html=True
-                        )
-
-                    # Emergency Detection
-                    if (
-                        features["chest pain"]
-                        and features["breathlessness"]
-                    ):
-
-                        st.error(
-                            "Emergency Warning: Seek medical attention immediately."
-                        )
-
-                    st.info(
-                        "This is not a medical diagnosis. Consult a doctor."
+                    st.success(
+                        f"{i+1}. {disease}"
                     )
 
-                    save_history(
-                        st.session_state.user,
-                        {
-                            "input": user_input,
-                            "result": top3[0][0]
-                        }
+                    st.write(
+                        f"Confidence: {confidence}%"
                     )
 
-            except Exception as e:
+                if (
+                    features["chest pain"]
+                    and features["breathlessness"]
+                ):
 
-                st.error("Prediction Error Occurred")
-                st.exception(e)
+                    st.error(
+                        "Emergency Warning: Seek medical attention immediately."
+                    )
+
+                st.info(
+                    "This is not a medical diagnosis. Consult a doctor."
+                )
+
+                save_history(
+                    st.session_state.user,
+                    {
+                        "input": user_input,
+                        "result": top3[0][0]
+                    }
+                )
 
     # ---------------- HISTORY ----------------
     elif menu == "History":
 
-        st.title("📜 Prediction History")
+        st.title("Prediction History")
 
-        history = get_history(st.session_state.user)
+        history = get_history(
+            st.session_state.user
+        )
 
         if history:
 
             for item in history[::-1]:
 
-                st.markdown(f"""
-                <div class='result-card'>
+                st.write(
+                    f"Symptoms: {item['input']}"
+                )
 
-                    <h4>Symptoms:</h4>
-                    <p>{item['input']}</p>
+                st.write(
+                    f"Prediction: {item['result']}"
+                )
 
-                    <h4>Prediction:</h4>
-                    <p>{item['result']}</p>
-
-                </div>
-                """, unsafe_allow_html=True)
+                st.divider()
 
         else:
             st.warning("No history available")
@@ -435,25 +409,9 @@ else:
     # ---------------- ABOUT ----------------
     else:
 
-        st.title("ℹ️ About Project")
+        st.title("About Project")
 
         st.write("""
-        This project is an AI-based disease prediction system
-        developed using:
-
-        - Python
-        - Streamlit
-        - NLP-Based Symptom Extraction
-        - Hybrid Rule-Based Prediction
-        - Medical Validation
-        - Exception Handling
-
-        Features:
-        - Real-time prediction
-        - 20+ disease support
-        - Smart symptom analysis
-        - Prediction history
-        - Emergency detection
-        - Interactive UI
-        - Top 3 disease prediction
+        AI-based disease prediction system
+        using NLP and weighted symptom analysis.
         """)
