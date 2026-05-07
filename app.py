@@ -23,6 +23,7 @@ st.markdown("""
     border-radius: 15px;
     margin-bottom: 15px;
     border-left: 5px solid #00ff99;
+    box-shadow: 0px 0px 10px rgba(0,255,153,0.2);
 }
 
 .big-title {
@@ -47,7 +48,7 @@ SYMPTOMS = [
     "ear pain"
 ]
 
-# ---------------- MEDICAL VALIDATION ----------------
+# ---------------- VALIDATION ----------------
 def is_medical_input(text):
 
     text = text.lower()
@@ -96,199 +97,158 @@ def extract(text):
         "ear pain": "ear pain" in text
     }
 
-# ---------------- ADVANCED PREDICTION ENGINE ----------------
+# ---------------- PREDICTION ENGINE ----------------
 def predict_disease(features):
 
     disease_data = {
 
         "Flu": {
-            "symptoms": {
-                "fever": 3,
-                "cough": 3,
-                "body pain": 2,
-                "fatigue": 2,
-                "headache": 1
-            }
+            "fever": 3,
+            "cough": 3,
+            "body pain": 2,
+            "fatigue": 2,
+            "headache": 1
         },
 
         "Common Cold": {
-            "symptoms": {
-                "cough": 3,
-                "runny nose": 3,
-                "sneezing": 2,
-                "congestion": 2
-            }
+            "cough": 3,
+            "runny nose": 3,
+            "sneezing": 2,
+            "congestion": 2
         },
 
         "COVID-19": {
-            "symptoms": {
-                "fever": 3,
-                "cough": 3,
-                "loss of taste": 4,
-                "breathlessness": 3,
-                "fatigue": 2
-            }
+            "fever": 3,
+            "cough": 3,
+            "loss of taste": 4,
+            "breathlessness": 3,
+            "fatigue": 2
         },
 
         "Typhoid": {
-            "symptoms": {
-                "fever": 3,
-                "abdominal pain": 3,
-                "weakness": 2,
-                "headache": 1,
-                "sweating": 2
-            }
+            "fever": 3,
+            "abdominal pain": 3,
+            "weakness": 2,
+            "headache": 1,
+            "sweating": 2
         },
 
         "Dengue": {
-            "symptoms": {
-                "fever": 3,
-                "body pain": 3,
-                "headache": 2,
-                "chills": 2,
-                "weakness": 2
-            }
+            "fever": 3,
+            "body pain": 3,
+            "headache": 2,
+            "chills": 2,
+            "weakness": 2
         },
 
         "Malaria": {
-            "symptoms": {
-                "fever": 3,
-                "chills": 3,
-                "sweating": 3,
-                "dizziness": 2,
-                "fatigue": 2
-            }
+            "fever": 3,
+            "chills": 3,
+            "sweating": 3,
+            "dizziness": 2,
+            "fatigue": 2
         },
 
         "Food Poisoning": {
-            "symptoms": {
-                "vomiting": 4,
-                "diarrhea": 4,
-                "stomach pain": 3,
-                "nausea": 2,
-                "bloating": 1
-            }
+            "vomiting": 4,
+            "diarrhea": 4,
+            "stomach pain": 3,
+            "nausea": 2,
+            "bloating": 1
         },
 
         "Migraine": {
-            "symptoms": {
-                "headache": 4,
-                "dizziness": 2,
-                "nausea": 2
-            }
+            "headache": 4,
+            "dizziness": 2,
+            "nausea": 2
         },
 
         "Asthma": {
-            "symptoms": {
-                "breathlessness": 4,
-                "cough": 2,
-                "chest pain": 2
-            }
+            "breathlessness": 4,
+            "cough": 2,
+            "chest pain": 2
         },
 
         "Pneumonia": {
-            "symptoms": {
-                "fever": 3,
-                "cough": 3,
-                "breathlessness": 3,
-                "chest pain": 2
-            }
+            "fever": 3,
+            "cough": 3,
+            "breathlessness": 3,
+            "chest pain": 2
         },
 
         "Allergy": {
-            "symptoms": {
-                "rash": 3,
-                "itching": 3,
-                "sneezing": 2,
-                "eye redness": 2
-            }
+            "rash": 3,
+            "itching": 3,
+            "sneezing": 2,
+            "eye redness": 2
         },
 
         "Sinusitis": {
-            "symptoms": {
-                "headache": 3,
-                "congestion": 3,
-                "runny nose": 2
-            }
+            "headache": 3,
+            "congestion": 3,
+            "runny nose": 2
         },
 
         "Gastritis": {
-            "symptoms": {
-                "acidity": 4,
-                "stomach pain": 3,
-                "bloating": 2,
-                "nausea": 1
-            }
+            "acidity": 4,
+            "stomach pain": 3,
+            "bloating": 2,
+            "nausea": 1
         },
 
         "Constipation": {
-            "symptoms": {
-                "constipation": 4,
-                "abdominal pain": 2,
-                "bloating": 2
-            }
+            "constipation": 4,
+            "abdominal pain": 2,
+            "bloating": 2
         },
 
         "Arthritis": {
-            "symptoms": {
-                "joint pain": 4,
-                "body pain": 2,
-                "weakness": 1
-            }
+            "joint pain": 4,
+            "body pain": 2,
+            "weakness": 1
         },
 
         "Viral Fever": {
-            "symptoms": {
-                "fever": 3,
-                "fatigue": 2,
-                "headache": 2
-            }
+            "fever": 3,
+            "fatigue": 2,
+            "headache": 2
         },
 
         "Dehydration": {
-            "symptoms": {
-                "weakness": 3,
-                "dizziness": 3,
-                "fatigue": 2
-            }
+            "weakness": 3,
+            "dizziness": 3,
+            "fatigue": 2
         },
 
         "Chickenpox": {
-            "symptoms": {
-                "fever": 2,
-                "rash": 4,
-                "itching": 3
-            }
+            "fever": 2,
+            "rash": 4,
+            "itching": 3
         },
 
         "Tuberculosis": {
-            "symptoms": {
-                "cough": 3,
-                "fever": 2,
-                "weakness": 3,
-                "chest pain": 2
-            }
+            "cough": 3,
+            "fever": 2,
+            "weakness": 3,
+            "chest pain": 2
         }
     }
 
     results = []
 
-    for disease, data in disease_data.items():
+    for disease, symptoms in disease_data.items():
 
         score = 0
-        total_possible = 0
+        total = 0
 
-        for symptom, weight in data["symptoms"].items():
+        for symptom, weight in symptoms.items():
 
-            total_possible += weight
+            total += weight
 
             if features.get(symptom):
                 score += weight
 
-        confidence = round(
-            (score / total_possible) * 100,
-            2
-        )
+        confidence = round((score / total) * 100, 2)
 
         if confidence > 0:
             results.append((disease, confidence))
@@ -446,9 +406,7 @@ else:
 
         st.title("📜 Prediction History")
 
-        history = get_history(
-            st.session_state.user
-        )
+        history = get_history(st.session_state.user)
 
         if history:
 
