@@ -2,26 +2,28 @@ import pandas as pd
 import pickle
 from sklearn.ensemble import RandomForestClassifier
 
+# ---------------- TRAIN MODEL ----------------
 def train_and_save():
+
     df = pd.read_csv("dataset.csv")
 
-    X = df.drop("disease", axis=1)
-    y = df["disease"]
+    X = df.iloc[:, :-1]
+    y = df.iloc[:, -1]
 
-    # Better than DecisionTree for this task
     model = RandomForestClassifier(
-        n_estimators=200,
-        max_depth=None,
-        min_samples_leaf=2,
-        random_state=42,
-        class_weight="balanced"
+        n_estimators=300,
+        random_state=42
     )
 
     model.fit(X, y)
 
-    with open("model.pkl", "wb") as f:
-        pickle.dump(model, f)
+    with open("model.pkl", "wb") as file:
+        pickle.dump(model, file)
 
+# ---------------- LOAD MODEL ----------------
 def load_model():
-    with open("model.pkl", "rb") as f:
-        return pickle.load(f)
+
+    with open("model.pkl", "rb") as file:
+        model = pickle.load(file)
+
+    return model
