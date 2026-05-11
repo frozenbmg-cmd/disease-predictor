@@ -6,6 +6,10 @@ st.set_page_config(
     layout="wide"
 )
 
+# ---------------- SESSION ----------------
+if "logged_in" not in st.session_state:
+    st.session_state.logged_in = False
+
 # ---------------- CSS ----------------
 st.markdown("""
 <style>
@@ -19,34 +23,33 @@ st.markdown("""
     background-color: #0b1324;
 }
 
-h1, h2, h3 {
-    color: white;
-}
-
-.block-container {
-    padding-top: 2rem;
-}
-
 </style>
 """, unsafe_allow_html=True)
 
-# ---------------- MAIN PAGE ----------------
+# ---------------- MAIN ----------------
 st.title("🩺 AI Disease Prediction System")
 
-st.markdown("""
-## Welcome to the Next-Generation AI Healthcare Assistant
+if st.session_state.logged_in:
 
-### Features:
-- Intelligent disease prediction
-- NLP-based symptom extraction
-- Weighted hybrid prediction engine
-- Advanced dashboard
-- Secure authentication
-- Prediction history
-- Emergency detection
-- Modern healthcare UI
+    st.success(
+        f"Welcome {st.session_state.username}"
+    )
 
-Use the sidebar to navigate through the application.
-""")
+    st.markdown("""
+    ## System Features
 
-st.info("Open pages from the left sidebar.")
+    - AI-based disease prediction
+    - NLP symptom extraction
+    - Weighted prediction engine
+    - Healthcare dashboard
+    - Prediction history
+    - Emergency detection
+
+    Open pages from sidebar.
+    """)
+
+else:
+
+    st.warning(
+        "Please login from sidebar pages."
+    )
