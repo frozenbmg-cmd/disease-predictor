@@ -5,13 +5,17 @@ USERS_FILE = "users.json"
 HISTORY_FILE = "history.json"
 
 # ---------------- CREATE FILES ----------------
-if not os.path.exists(USERS_FILE):
-    with open(USERS_FILE, "w") as f:
-        json.dump({}, f)
+def initialize_files():
 
-if not os.path.exists(HISTORY_FILE):
-    with open(HISTORY_FILE, "w") as f:
-        json.dump({}, f)
+    if not os.path.exists(USERS_FILE):
+        with open(USERS_FILE, "w") as f:
+            json.dump({}, f)
+
+    if not os.path.exists(HISTORY_FILE):
+        with open(HISTORY_FILE, "w") as f:
+            json.dump({}, f)
+
+initialize_files()
 
 # ---------------- REGISTER ----------------
 def register(username, password):
@@ -25,7 +29,7 @@ def register(username, password):
     users[username] = password
 
     with open(USERS_FILE, "w") as f:
-        json.dump(users, f)
+        json.dump(users, f, indent=4)
 
     return True
 
@@ -49,7 +53,7 @@ def save_history(username, data):
     history[username].append(data)
 
     with open(HISTORY_FILE, "w") as f:
-        json.dump(history, f)
+        json.dump(history, f, indent=4)
 
 # ---------------- GET HISTORY ----------------
 def get_history(username):
