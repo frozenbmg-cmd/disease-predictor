@@ -133,14 +133,8 @@ elif (
 # =====================================================
 elif st.session_state.logged_in:
 
-    from symptom_extractor import (
-        extract,
-        is_medical_input
-    )
-
-    from prediction_engine import (
-        predict_disease
-    )
+    from symptom_extractor import extract, is_medical_input
+    from prediction_engine import predict_disease
 
     st.title("🩺 AI Disease Prediction System")
 
