@@ -1,52 +1,67 @@
 from disease_database import DISEASES
 
-# ---------------- PREDICTION ----------------
 def predict_disease(features):
 
-    results = []
+```
+results = []
 
-    for disease, symptoms in DISEASES.items():
+doctor_map = {
 
-        score = 0
-        total = 0
+    "Asthma": "Pulmonologist",
+    "Pneumonia": "Pulmonologist",
+    "Bronchitis": "Pulmonologist",
 
-        for symptom, weight in symptoms.items():
+    "Migraine": "Neurologist",
+    "Vertigo": "Neurologist",
 
-            total += weight
+    "Food Poisoning": "Gastroenterologist",
+    "Gastritis": "Gastroenterologist",
+    "IBS": "Gastroenterologist",
 
-            if features.get(symptom):
-                score += weight
+    "Allergy": "Dermatologist",
+    "Eczema": "Dermatologist",
+    "Fungal Infection": "Dermatologist",
 
-        confidence = round(
-            (score / total) * 100,
-            2
-        )
-
-        if confidence > 0:
-
-           doctor = {
-    "Asthma":"Pulmonologist",
-    "Pneumonia":"Pulmonologist",
-    "Migraine":"Neurologist",
-    "Food Poisoning":"Gastroenterologist",
-    "Allergy":"Dermatologist",
-    "Flu":"General Physician",
-    "Dengue":"General Physician",
-    "Malaria":"General Physician"
+    "Diabetes": "Endocrinologist",
+    "Hypertension": "Cardiologist"
 }
 
-results.append({
-    "disease": disease,
-    "confidence": confidence,
-    "doctor": doctor.get(
-        disease,
-        "General Physician"
-    )
-})
+for disease, symptoms in DISEASES.items():
 
-    results.sort(
-        key=lambda x: x["confidence"],
-        reverse=True
+    score = 0
+    total = 0
+
+    for symptom, weight in symptoms.items():
+
+        total += weight
+
+        if features.get(symptom):
+            score += weight
+
+    confidence = round(
+        (score / total) * 100,
+        2
     )
 
-    return results[:3]
+    if confidence > 0:
+
+        results.append({
+
+            "disease": disease,
+
+            "confidence": confidence,
+
+            "doctor": doctor_map.get(
+                disease,
+                "General Physician"
+            )
+
+        })
+
+results.sort(
+    key=lambda x: x["confidence"],
+    reverse=True
+)
+
+return results[:3]
+```
