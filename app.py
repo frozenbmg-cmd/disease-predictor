@@ -3,31 +3,25 @@ from auth import register, login, save_history, get_history
 from symptom_extractor import extract, is_medical_input
 from prediction_engine import predict_disease
 
-# ---------------- PAGE CONFIG ----------------
-
+---------------- PAGE CONFIG ----------------
 st.set_page_config(
 page_title="AI Health Assistant",
 page_icon="🩺",
 layout="wide"
 )
 
-# ---------------- SESSION ----------------
-
+---------------- SESSION ----------------
 if "page" not in st.session_state:
 st.session_state.page = "register"
 
 if "logged_in" not in st.session_state:
 st.session_state.logged_in = False
 
-# =====================================================
-
-# REGISTER PAGE
-
-# =====================================================
-
+=====================================================
+REGISTER PAGE
+=====================================================
 if st.session_state.page == "register" and not st.session_state.logged_in:
 
-```
 st.title("🩺 AI Health Assistant")
 st.subheader("Create Account")
 
@@ -57,17 +51,11 @@ if st.button("Go to Login"):
 
     st.session_state.page = "login"
     st.rerun()
-```
-
-# =====================================================
-
-# LOGIN PAGE
-
-# =====================================================
-
+=====================================================
+LOGIN PAGE
+=====================================================
 elif st.session_state.page == "login" and not st.session_state.logged_in:
 
-```
 st.title("🔐 Login")
 
 username = st.text_input(
@@ -104,17 +92,11 @@ if st.button("Create Account"):
 
     st.session_state.page = "register"
     st.rerun()
-```
-
-# =====================================================
-
-# MAIN APPLICATION
-
-# =====================================================
-
+=====================================================
+MAIN APPLICATION
+=====================================================
 elif st.session_state.logged_in:
 
-```
 st.title("🩺 AI Healthcare Assistant")
 
 st.write(
@@ -163,8 +145,6 @@ if st.button("Predict"):
         ):
 
             st.error("""
-```
-
 🚨 Emergency Alert
 
 Possible serious respiratory or cardiac condition detected.
@@ -172,7 +152,6 @@ Possible serious respiratory or cardiac condition detected.
 Please consult a doctor immediately.
 """)
 
-```
         predictions = predict_disease(features)
 
         st.subheader("Prediction Results")
@@ -196,4 +175,3 @@ Please consult a doctor immediately.
 
             <h2 style="color:{colors[i]};">
             {i+1}. {pred['disease']}
-```
