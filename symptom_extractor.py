@@ -119,9 +119,45 @@ def extract(text):
 
 
 def is_medical_input(text):
-    """Validate if input contains medical-related keywords"""
-    medical_keywords = [
-        "fever", "cough", "pain", "headache", "symptom",
-        "sick", "ill", "disease", "condition", "health"
+
+    text = text.lower()
+
+    symptoms = [
+
+        "fever",
+        "cough",
+        "headache",
+        "fatigue",
+        "body pain",
+        "diarrhea",
+        "vomiting",
+        "sore throat",
+        "chills",
+        "nausea",
+        "runny nose",
+        "running nose",
+        "congestion",
+        "sneezing",
+        "dizziness",
+        "stomach pain",
+        "bloating",
+        "breathlessness",
+        "rash",
+        "itching",
+        "chest pain",
+        "joint pain",
+        "loss of taste",
+        "acidity",
+        "constipation",
+        "weakness",
+        "abdominal pain",
+        "sweating",
+        "eye redness",
+        "ear pain"
+
     ]
-    return any(keyword in text.lower() for keyword in medical_keywords)
+
+    return any(
+        symptom in text
+        for symptom in symptoms
+    )
