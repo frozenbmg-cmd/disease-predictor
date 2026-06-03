@@ -60,13 +60,17 @@ def extract(text):
 
         "cough": "cough" in text,
 
-        "headache": "headache" in text,
-
-        "fatigue": any(x in text for x in [
-            "fatigue",
-            "tired",
-            "weak"
-        ]),
+        "headache": any(x in text for x in [
+    "headache",
+    "head pain"
+]),
+       "fatigue": any(x in text for x in [
+    "fatigue",
+    "tired",
+    "weak",
+    "exhausted",
+    "no energy"
+]),
 
         "body pain": any(x in text for x in [
             "body pain",
@@ -92,10 +96,11 @@ def extract(text):
 
         "nausea": "nausea" in text,
 
-        "runny nose": any(x in text for x in [
-            "runny nose",
-            "running nose"
-        ]),
+       "runny nose": any(x in text for x in [
+    "runny nose",
+    "running nose",
+    "nasal discharge"
+]),
 
         "congestion": "congestion" in text,
 
