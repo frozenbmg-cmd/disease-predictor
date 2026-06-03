@@ -75,63 +75,113 @@ st.markdown("""
 
 /* REPORT SECTION */
 .report-container{
-    background:#111827;
-    border:1px solid #1F2937;
-    border-radius:12px;
-    padding:40px;
     margin:30px 0;
 }
 
-.report-header{
-    text-align:center;
-    margin-bottom:30px;
-}
-
-.report-title{
-    font-size:18px;
-    font-weight:700;
-    color:#F8FAFC;
-    margin-bottom:8px;
-}
-
-.report-divider{
-    height:1px;
-    background:#1F2937;
+/* AI UNDERSTANDING */
+.ai-understanding{
+    background:#111827;
+    border-left:4px solid #2563EB;
+    border-radius:8px;
+    padding:20px;
     margin:20px 0;
 }
 
-/* DETECTED SYMPTOMS */
-.symptoms-section{
+.ai-understanding-title{
+    font-size:14px;
+    font-weight:700;
+    color:#2563EB;
+    margin-bottom:12px;
+}
+
+.ai-understanding-text{
+    font-size:14px;
+    color:#CBD5E1;
+    line-height:1.6;
+    margin-bottom:12px;
+}
+
+.symptom-list{
+    margin:12px 0;
+}
+
+.symptom-item{
+    display:inline-block;
+    background:#0B1220;
+    color:#10B981;
+    padding:6px 12px;
+    border-radius:6px;
+    margin:4px 4px 4px 0;
+    font-size:13px;
+    font-weight:500;
+}
+
+/* EMERGENCY ALERT */
+.emergency-card{
+    background:#7F1D1D;
+    border:2px solid #DC2626;
+    border-radius:8px;
+    padding:25px;
     margin:25px 0;
 }
 
-.section-title{
+.emergency-title{
+    font-size:16px;
+    font-weight:700;
+    color:#FCA5A5;
+    text-transform:uppercase;
+    margin-bottom:12px;
+}
+
+.emergency-text{
     font-size:14px;
+    color:#F3F4F6;
+    line-height:1.6;
+    margin:8px 0;
+}
+
+.emergency-actions{
+    background:#6B1919;
+    padding:12px;
+    border-radius:6px;
+    margin-top:12px;
+    font-size:13px;
+    color:#F3F4F6;
+}
+
+.emergency-action-item{
+    margin:6px 0;
+}
+
+/* DETECTED SYMPTOMS */
+.detected-symptoms{
+    background:#111827;
+    border:1px solid #1F2937;
+    border-radius:8px;
+    padding:20px;
+    margin:20px 0;
+}
+
+.section-title{
+    font-size:13px;
     font-weight:700;
     text-transform:uppercase;
     letter-spacing:0.5px;
     color:#94A3B8;
-    margin-bottom:15px;
+    margin-bottom:12px;
 }
 
-.symptom-badge{
-    display:inline-block;
-    background:#1F2937;
-    color:#10B981;
-    padding:8px 16px;
-    border-radius:6px;
-    margin:6px 6px 6px 0;
-    font-size:14px;
-    font-weight:500;
-}
-
-/* PRIMARY ASSESSMENT */
-.assessment-section{
-    margin:30px 0;
+/* PRIMARY DIAGNOSIS */
+.primary-diagnosis{
+    background:#111827;
+    border:2px solid #2563EB;
+    border-radius:8px;
+    padding:30px;
+    margin:25px 0;
     text-align:center;
 }
 
-.assessment-label{
+.diagnosis-label{
     font-size:12px;
     font-weight:700;
     text-transform:uppercase;
@@ -140,35 +190,95 @@ st.markdown("""
     margin-bottom:12px;
 }
 
-.assessment-disease{
+.diagnosis-name{
     font-size:36px;
     font-weight:700;
     color:#2563EB;
     margin:15px 0;
 }
 
-/* CONFIDENCE VISUAL */
-.confidence-section{
+.diagnosis-stat{
+    display:inline-block;
     background:#0B1220;
-    padding:25px;
-    border-radius:8px;
-    margin:20px 0;
-    text-align:center;
+    padding:12px 20px;
+    border-radius:6px;
+    margin:8px;
 }
 
-.confidence-label{
-    font-size:12px;
+.stat-label{
+    font-size:11px;
+    font-weight:700;
+    text-transform:uppercase;
+    color:#94A3B8;
+}
+
+.stat-value{
+    font-size:24px;
+    font-weight:700;
+    color:#10B981;
+    margin-top:4px;
+}
+
+/* SECONDARY DIAGNOSES */
+.secondary-section{
+    margin:25px 0;
+}
+
+.secondary-title{
+    font-size:13px;
     font-weight:700;
     text-transform:uppercase;
     letter-spacing:0.5px;
     color:#94A3B8;
-    margin-bottom:15px;
+    margin-bottom:12px;
+}
+
+.secondary-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+}
+
+.secondary-card{
+    background:#111827;
+    border:1px solid #1F2937;
+    border-radius:8px;
+    padding:15px;
+    text-align:center;
+}
+
+.secondary-disease{
+    font-size:16px;
+    font-weight:700;
+    color:#F8FAFC;
+    margin-bottom:8px;
+}
+
+.secondary-stat{
+    font-size:14px;
+    color:#10B981;
+    font-weight:600;
+    margin:4px 0;
+}
+
+.secondary-specialist{
+    font-size:12px;
+    color:#94A3B8;
+}
+
+/* CONFIDENCE VISUAL */
+.confidence-section{
+    background:#111827;
+    border:1px solid #1F2937;
+    border-radius:8px;
+    padding:20px;
+    margin:20px 0;
 }
 
 .confidence-bar{
-    background:#1F2937;
-    height:12px;
-    border-radius:6px;
+    background:#0B1220;
+    height:8px;
+    border-radius:4px;
     overflow:hidden;
     margin:15px 0;
 }
@@ -178,47 +288,51 @@ st.markdown("""
     background:linear-gradient(90deg, #10B981 0%, #2563EB 100%);
 }
 
-.confidence-value{
-    font-size:32px;
-    font-weight:700;
-    color:#2563EB;
-    margin-top:10px;
+.confidence-text{
+    font-size:14px;
+    color:#CBD5E1;
+    text-align:center;
 }
 
-/* SPECIALIST RECOMMENDATION */
-.specialist-section{
-    background:#0B1220;
-    padding:25px;
+/* RISK LEVEL */
+.risk-section{
+    background:#111827;
+    border:1px solid #1F2937;
     border-radius:8px;
+    padding:20px;
+    margin:20px 0;
+    text-align:center;
+}
+
+.risk-level-badge{
+    font-size:32px;
+    font-weight:700;
+    margin:15px 0;
+}
+
+.risk-low{
+    color:#10B981;
+}
+
+.risk-moderate{
+    color:#FBBF24;
+}
+
+.risk-high{
+    color:#DC2626;
+}
+
+/* CLINICAL EXPLANATION */
+.clinical-explanation{
+    background:#111827;
+    border-left:4px solid #2563EB;
+    border-radius:8px;
+    padding:20px;
     margin:20px 0;
 }
 
-.specialist-label{
-    font-size:12px;
-    font-weight:700;
-    text-transform:uppercase;
-    letter-spacing:0.5px;
-    color:#94A3B8;
-    margin-bottom:10px;
-}
-
-.specialist-name{
-    font-size:20px;
-    font-weight:600;
-    color:#F8FAFC;
-}
-
-/* AI CLINICAL NOTE */
-.clinical-note{
-    background:#0B1220;
-    border-left:4px solid #2563EB;
-    padding:20px;
-    border-radius:8px;
-    margin:25px 0;
-}
-
-.clinical-note-title{
-    font-size:12px;
+.explanation-title{
+    font-size:13px;
     font-weight:700;
     text-transform:uppercase;
     letter-spacing:0.5px;
@@ -226,60 +340,51 @@ st.markdown("""
     margin-bottom:12px;
 }
 
-.clinical-note-text{
-    font-size:15px;
+.explanation-text{
+    font-size:14px;
     color:#CBD5E1;
     line-height:1.7;
 }
 
-/* SECONDARY DIAGNOSES */
-.secondary-section{
-    margin:30px 0;
-}
-
-.secondary-title{
-    font-size:14px;
-    font-weight:700;
-    text-transform:uppercase;
-    letter-spacing:0.5px;
-    color:#94A3B8;
-    margin-bottom:15px;
-    text-align:center;
-}
-
-.secondary-cards{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:15px;
-    margin-top:15px;
-}
-
-.secondary-card{
-    background:#0B1220;
+/* DOCTOR RECOMMENDATION */
+.doctor-section{
+    background:#111827;
     border:1px solid #1F2937;
     border-radius:8px;
-    padding:15px;
-    text-align:center;
+    padding:20px;
+    margin:20px 0;
 }
 
-.secondary-number{
-    font-size:12px;
-    font-weight:700;
-    color:#94A3B8;
-    text-transform:uppercase;
-}
-
-.secondary-disease{
+.doctor-name{
     font-size:18px;
     font-weight:700;
-    color:#F8FAFC;
-    margin:8px 0;
+    color:#2563EB;
+    margin:10px 0;
 }
 
-.secondary-confidence{
+.doctor-reason{
+    font-size:13px;
+    color:#CBD5E1;
+    line-height:1.6;
+    margin-top:12px;
+    padding-top:12px;
+    border-top:1px solid #1F2937;
+}
+
+/* HEALTH GUIDANCE */
+.health-guidance{
+    background:#111827;
+    border:1px solid #1F2937;
+    border-radius:8px;
+    padding:20px;
+    margin:20px 0;
+}
+
+.guidance-item{
     font-size:14px;
-    color:#10B981;
-    font-weight:600;
+    color:#CBD5E1;
+    margin:8px 0;
+    padding-left:20px;
 }
 
 /* DISCLAIMER */
@@ -287,44 +392,21 @@ st.markdown("""
     background:#1F2937;
     border:1px solid #374151;
     border-radius:8px;
-    padding:20px;
-    margin:25px 0;
+    padding:15px;
+    margin:20px 0;
 }
 
 .disclaimer-title{
-    font-size:13px;
+    font-size:12px;
     font-weight:700;
     color:#FBBF24;
-    margin-bottom:8px;
     text-transform:uppercase;
+    margin-bottom:6px;
 }
 
 .disclaimer-text{
-    font-size:14px;
-    color:#CBD5E1;
-    line-height:1.6;
-}
-
-/* EMERGENCY ALERT */
-.emergency-card{
-    background:#7F1D1D;
-    border:2px solid #DC2626;
-    border-radius:8px;
-    padding:20px;
-    margin:25px 0;
-}
-
-.emergency-title{
     font-size:13px;
-    font-weight:700;
-    color:#FCA5A5;
-    text-transform:uppercase;
-    margin-bottom:8px;
-}
-
-.emergency-text{
-    font-size:14px;
-    color:#F3F4F6;
+    color:#CBD5E1;
     line-height:1.6;
 }
 
@@ -348,14 +430,14 @@ st.markdown("""
 }
 
 .history-disease{
-    font-size:16px;
+    font-size:15px;
     color:#2563EB;
-    font-weight:600;
+    font-weight:700;
     margin-top:6px;
 }
 
 .history-confidence{
-    font-size:14px;
+    font-size:13px;
     color:#10B981;
     margin-top:4px;
 }
@@ -471,7 +553,7 @@ elif (
         st.rerun()
 
 # =====================================================
-# MAIN APPLICATION - DXGPT STYLE
+# MAIN APPLICATION - HYBRID DESIGN
 # =====================================================
 elif st.session_state.logged_in:
 
@@ -541,6 +623,7 @@ elif st.session_state.logged_in:
                     "symptoms": symptoms,
                     "detected": detected_symptoms,
                     "predictions": predictions,
+                    "features": features,
                     "timestamp": datetime.now()
                 }
 
@@ -560,123 +643,199 @@ elif st.session_state.logged_in:
             st.session_state.show_report = "history"
             st.rerun()
 
-    # ========== REPORT VIEW ==========
+    # ========== CONSULTATION REPORT VIEW ==========
     elif st.session_state.show_report == True and st.session_state.report_data:
 
         data = st.session_state.report_data
 
-        if st.button("← Back"):
+        if st.button("← Back to Input"):
             st.session_state.show_report = False
             st.session_state.report_data = None
             st.rerun()
 
         st.write("")
 
-        # ========== CLINICAL ASSESSMENT REPORT ==========
+        # ========== 1. AI UNDERSTANDING PANEL ==========
         st.markdown("""
-        <div class='report-container'>
-        <div class='report-header'>
-        <div class='report-title'>Clinical Assessment Report</div>
-        <div class='report-divider'></div>
+        <div class='ai-understanding'>
+        <div class='ai-understanding-title'>🤖 AI Assistant Understanding</div>
+        <div class='ai-understanding-text'>
+        I've analyzed your description and detected the following symptoms:
+        </div>
+        <div class='symptom-list'>
+        """ + "".join([f"<span class='symptom-item'>• {symptom.title()}</span>" for symptom in data["detected"]]) + """
+        </div>
+        <div class='ai-understanding-text' style='margin-top:12px;'>
+        Now comparing these symptoms against our medical knowledge base to identify potential conditions...
+        </div>
         </div>
         """, unsafe_allow_html=True)
 
-        # Detected Symptoms
-        st.markdown("<div class='section-title'>Detected Symptoms</div>", unsafe_allow_html=True)
+        st.write("")
 
-        for symptom in data["detected"]:
-            st.markdown(f"<span class='symptom-badge'>✓ {symptom.title()}</span>", unsafe_allow_html=True)
+        # ========== 2. EMERGENCY ALERT ENGINE ==========
+        if data["features"].get("chest pain") and data["features"].get("breathlessness"):
+
+            st.markdown("""
+            <div class='emergency-card'>
+            <div class='emergency-title'>🚨 High Priority Medical Alert</div>
+            <div class='emergency-text'>
+            <b>Critical Finding:</b> The combination of chest pain and breathlessness has been detected.
+            </div>
+            <div class='emergency-text'>
+            <b>Clinical Significance:</b> This symptom combination may indicate a potentially serious respiratory or cardiac condition that requires immediate medical evaluation.
+            </div>
+            <div class='emergency-actions'>
+            <b style='color:#FCA5A5;'>Recommended Actions:</b>
+            <div class='emergency-action-item'>• Seek medical attention immediately</div>
+            <div class='emergency-action-item'>• Avoid strenuous activity</div>
+            <div class='emergency-action-item'>• Contact emergency services if symptoms worsen</div>
+            </div>
+            </div>
+            """, unsafe_allow_html=True)
+
+            st.write("")
+
+        # ========== 3. DETECTED SYMPTOMS SECTION ==========
+        st.markdown(f"""
+        <div class='detected-symptoms'>
+        <div class='section-title'>Detected Symptoms ({len(data['detected'])})</div>
+        """ + "".join([f"<span class='symptom-item'>✓ {symptom.title()}</span>" for symptom in data["detected"]]) + """
+        </div>
+        """, unsafe_allow_html=True)
 
         st.write("")
 
-        # Primary Assessment
+        # ========== 4. PRIMARY DIAGNOSIS ==========
         if data["predictions"]:
             primary = data["predictions"][0]
 
             st.markdown(f"""
-            <div class='assessment-section'>
-            <div class='assessment-label'>Primary Assessment</div>
-            <div class='assessment-disease'>{primary['disease']}</div>
+            <div class='primary-diagnosis'>
+            <div class='diagnosis-label'>Primary Assessment</div>
+            <div class='diagnosis-name'>{primary['disease']}</div>
+            <div style='margin-top:15px;'>
+            <div class='diagnosis-stat'>
+            <div class='stat-label'>Confidence Score</div>
+            <div class='stat-value'>{primary['confidence']}%</div>
             </div>
-            """, unsafe_allow_html=True)
-
-            # Confidence Visual
-            st.markdown("""
-            <div class='confidence-section'>
-            <div class='confidence-label'>Clinical Confidence</div>
-            """, unsafe_allow_html=True)
-
-            st.markdown(f"""
-            <div class='confidence-bar'>
-            <div class='confidence-fill' style='width:{min(primary['confidence'], 100)}%;'></div>
-            </div>
-            <div class='confidence-value'>{primary['confidence']}%</div>
-            </div>
-            """, unsafe_allow_html=True)
-
-            # Specialist Recommendation
-            st.markdown(f"""
-            <div class='specialist-section'>
-            <div class='specialist-label'>Recommended Specialist</div>
-            <div class='specialist-name'>{primary['doctor']}</div>
-            </div>
-            """, unsafe_allow_html=True)
-
-            # AI Clinical Note
-            st.markdown(f"""
-            <div class='clinical-note'>
-            <div class='clinical-note-title'>AI Clinical Note</div>
-            <div class='clinical-note-text'>
-            The symptom combination suggests a possible diagnosis of <b>{primary['disease'].lower()}</b>. 
-            A consultation with a <b>{primary['doctor']}</b> is recommended for proper evaluation and treatment.
             </div>
             </div>
             """, unsafe_allow_html=True)
 
-            # Emergency Alert
-            if (
-                data["detected"] and
-                "chest pain" in data["detected"] and
-                "breathlessness" in data["detected"]
-            ):
-                st.markdown("""
-                <div class='emergency-card'>
-                <div class='emergency-title'>⚠️ Clinical Alert</div>
-                <div class='emergency-text'>
-                The combination of chest pain and breathlessness may indicate a serious condition. 
-                <b>Seek immediate medical attention.</b>
-                </div>
-                </div>
+            st.write("")
+
+            # ========== 5. ALTERNATIVE DIAGNOSES ==========
+            if len(data["predictions"]) > 1:
+                st.markdown(f"""
+                <div class='secondary-section'>
+                <div class='secondary-title'>Secondary Possibilities</div>
                 """, unsafe_allow_html=True)
 
-            # Secondary Diagnoses
-            if len(data["predictions"]) > 1:
-                st.markdown("<div class='secondary-title'>Alternative Assessments</div>", unsafe_allow_html=True)
-
-                st.markdown("<div class='secondary-cards'>", unsafe_allow_html=True)
+                st.markdown("<div class='secondary-grid'>", unsafe_allow_html=True)
 
                 for i, pred in enumerate(data["predictions"][1:3]):
                     st.markdown(f"""
                     <div class='secondary-card'>
-                    <div class='secondary-number'>Alternative {i+2}</div>
                     <div class='secondary-disease'>{pred['disease']}</div>
-                    <div class='secondary-confidence'>{pred['confidence']}% • {pred['doctor']}</div>
+                    <div class='secondary-stat'>{pred['confidence']}%</div>
+                    <div class='secondary-specialist'>{pred['doctor']}</div>
                     </div>
                     """, unsafe_allow_html=True)
 
                 st.markdown("</div>", unsafe_allow_html=True)
+                st.markdown("</div>", unsafe_allow_html=True)
 
-        st.markdown("</div>", unsafe_allow_html=True)
+                st.write("")
 
-        st.write("")
+            # ========== 6. CONFIDENCE VISUAL ==========
+            st.markdown(f"""
+            <div class='confidence-section'>
+            <div class='section-title'>Confidence Assessment</div>
+            <div class='confidence-bar'>
+            <div class='confidence-fill' style='width:{min(primary['confidence'], 100)}%;'></div>
+            </div>
+            <div class='confidence-text'><b>{primary['confidence']}%</b> confidence in this assessment</div>
+            </div>
+            """, unsafe_allow_html=True)
+
+            st.write("")
+
+            # ========== 7. RISK LEVEL ENGINE ==========
+            if data["features"].get("chest pain") and data["features"].get("breathlessness"):
+                risk_level = "High"
+                risk_emoji = "🔴"
+                risk_class = "risk-high"
+            elif primary['confidence'] > 80:
+                risk_level = "Moderate"
+                risk_emoji = "🟡"
+                risk_class = "risk-moderate"
+            else:
+                risk_level = "Low"
+                risk_emoji = "🟢"
+                risk_class = "risk-low"
+
+            st.markdown(f"""
+            <div class='risk-section'>
+            <div class='section-title'>Patient Risk Level</div>
+            <div class='risk-level-badge {risk_class}'>{risk_emoji} {risk_level} Risk</div>
+            </div>
+            """, unsafe_allow_html=True)
+
+            st.write("")
+
+            # ========== 8. DOCTOR RECOMMENDATION ==========
+            st.markdown(f"""
+            <div class='doctor-section'>
+            <div class='section-title'>Recommended Specialist</div>
+            <div class='doctor-name'>{primary['doctor']}</div>
+            <div class='doctor-reason'>
+            <b>Clinical Reasoning:</b> The detected symptoms and diagnosis indicate a possible {primary['disease'].lower()} condition. 
+            A consultation with a {primary['doctor']} is recommended for proper evaluation, diagnosis confirmation, and treatment planning.
+            </div>
+            </div>
+            """, unsafe_allow_html=True)
+
+            st.write("")
+
+            # ========== 9. AI CLINICAL EXPLANATION ==========
+            st.markdown(f"""
+            <div class='clinical-explanation'>
+            <div class='explanation-title'>AI Clinical Explanation</div>
+            <div class='explanation-text'>
+            The prediction of <b>{primary['disease']}</b> is based on the presence of the following symptom patterns:
+            <br><br>
+            """ + ", ".join([f"<b>{s.title()}</b>" for s in data["detected"][:3]]) + f"""
+            <br><br>
+            These symptoms commonly appear together in respiratory and systemic conditions such as {primary['disease'].lower()}. 
+            The high confidence score ({primary['confidence']}%) indicates a strong match with known clinical presentations of this condition.
+            </div>
+            </div>
+            """, unsafe_allow_html=True)
+
+            st.write("")
+
+            # ========== 10. HEALTH GUIDANCE ==========
+            st.markdown("""
+            <div class='health-guidance'>
+            <div class='section-title'>Health Guidance</div>
+            <div class='guidance-item'>• Stay hydrated and maintain adequate rest</div>
+            <div class='guidance-item'>• Monitor your symptoms for any changes or worsening</div>
+            <div class='guidance-item'>• Schedule an appointment with the recommended specialist</div>
+            <div class='guidance-item'>• Avoid self-medication without professional guidance</div>
+            <div class='guidance-item'>• Keep track of when symptoms started and how they've progressed</div>
+            </div>
+            """, unsafe_allow_html=True)
+
+            st.write("")
 
         # ========== DISCLAIMER ==========
         st.markdown("""
         <div class='disclaimer-card'>
         <div class='disclaimer-title'>⚠️ Important Notice</div>
         <div class='disclaimer-text'>
-        This system provides AI-assisted health insights and is not a substitute for professional medical diagnosis, 
-        treatment, or advice. Always consult with licensed healthcare professionals for medical concerns.
+        This system provides AI-assisted health insights and is not a substitute for professional medical diagnosis, treatment, or advice. 
+        Always consult with licensed healthcare professionals for medical concerns.
         </div>
         </div>
         """, unsafe_allow_html=True)
@@ -684,7 +843,7 @@ elif st.session_state.logged_in:
     # ========== HISTORY VIEW ==========
     elif st.session_state.show_report == "history":
 
-        if st.button("← Back"):
+        if st.button("← Back to Input"):
             st.session_state.show_report = False
             st.rerun()
 
