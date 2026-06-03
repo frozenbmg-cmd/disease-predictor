@@ -2,11 +2,12 @@ import streamlit as st
 from auth import register, login, save_history, get_history
 from symptom_extractor import extract, is_medical_input
 from prediction_engine import predict_disease
+from datetime import datetime
 
 
 # ---------------- PAGE CONFIG ----------------
 st.set_page_config(
-    page_title="AI Health Assistant",
+    page_title="AI Healthcare Assistant",
     page_icon="🩺",
     layout="wide"
 )
@@ -27,6 +28,27 @@ st.markdown("""
 .subtitle{
     color:#9ca3af;
     font-size:18px;
+}
+
+.hero-section{
+    padding:30px;
+    border-radius:20px;
+    background:linear-gradient(135deg,#0f172a,#1e293b);
+    text-align:center;
+    margin-bottom:25px;
+}
+
+.hero-title{
+    font-size:48px;
+    font-weight:bold;
+    color:white;
+    margin-bottom:10px;
+}
+
+.hero-subtitle{
+    color:#cbd5e1;
+    font-size:18px;
+    line-height:1.6;
 }
 
 .result-card{
@@ -174,21 +196,23 @@ elif (
 elif st.session_state.logged_in:
 
     st.markdown("""
-    <div class='main-title'>
-    🩺 AI Disease Prediction System
+    <div class='hero-section'>
+    <div class='hero-title'>🩺 AI Healthcare Assistant</div>
+    <div class='hero-subtitle'>
+    Analyze symptoms, predict possible diseases,<br>
+    receive doctor recommendations and health insights.
     </div>
-
-    <div class='subtitle'>
-    Intelligent Symptom Analysis and Healthcare Assistance
     </div>
     """, unsafe_allow_html=True)
 
     col1, col2 = st.columns([5, 1])
 
     with col1:
-
         st.success(
             f"Welcome {st.session_state.username}"
+        )
+        st.caption(
+            "AI-powered healthcare assistant ready for symptom analysis."
         )
 
     with col2:
@@ -202,11 +226,11 @@ elif st.session_state.logged_in:
 
     st.write("---")
 
-    st.write("### Enter Symptoms")
+    st.write("### 💬 Describe Your Symptoms")
 
     symptoms = st.text_input(
         "",
-        placeholder="Example: fever, cough, body pain"
+        placeholder="Example: I have fever and body pain for 2 days"
     )
 
     if st.button("Predict"):
@@ -221,42 +245,87 @@ elif st.session_state.logged_in:
 
             features = extract(symptoms)
 
+            detected_symptoms = [k for k, v in features.items() if v]
+
+            st.markdown("""
+            ### 🤖 AI Analysis
+            """)
+
+            st.info(
+                f"**Detected Symptoms:** {', '.join(detected_symptoms)}\n\n"
+                f"**Status:** Analyzing {25}+ diseases..."
+            )
+
             # Emergency Alert
             if (
                 features["chest pain"]
                 and features["breathlessness"]
             ):
 
-                st.error(
-                    "🚨 Emergency Alert: Possible serious respiratory or cardiac condition detected. Please consult a doctor immediately."
-                )
+                st.markdown("""
+                ### 🚨 Critical Symptom Combination Detected
+
+                **Possible Causes:**
+                • Severe Asthma
+                • Pneumonia
+                • Cardiac Conditions
+
+                **Recommended Action:**
+                • Visit Emergency Department
+                • Seek Immediate Medical Advice
+                • Avoid Physical Exertion
+                """)
 
             predictions = predict_disease(
                 features
             )
 
-            st.subheader(
-                "Prediction Results"
-            )
+            st.write("---")
 
-            col1, col2, col3 = st.columns(3)
+            st.markdown("""
+            ### 📊 Health Risk Assessment
+            """)
+
+            if predictions[0]["confidence"] > 70:
+                st.success("✅ Low Risk - Monitor Regularly")
+            elif predictions[0]["confidence"] > 50:
+                st.warning("⚠️ Moderate Risk - Consult Doctor")
+            else:
+                st.error("🔴 High Risk - Seek Medical Attention")
+
+            st.write("---")
+
+            st.markdown("""
+            ### 📈 Analytics Dashboard
+            """)
+
+            col1, col2, col3, col4 = st.columns(4)
 
             col1.metric(
-                "Diseases",
-                len(predictions)
+                "Symptoms Detected",
+                len(detected_symptoms)
             )
 
             col2.metric(
+                "Predictions",
+                len(predictions)
+            )
+
+            col3.metric(
                 "Top Confidence",
                 f"{predictions[0]['confidence']}%"
             )
 
-            col3.metric(
+            col4.metric(
                 "Status",
-                "Analyzed"
+                "Completed"
             )
 
             st.write("---")
+
+            st.markdown("""
+            ### 🎯 Prediction Results
+            """)
 
             colors = [
                 "#00ff99",
@@ -264,9 +333,25 @@ elif st.session_state.logged_in:
                 "#ff4d4d"
             ]
 
-            for i, pred in enumerate(
-                predictions
-            ):
+            health_tips = {
+                "Flu": "Drink fluids and get adequate rest.",
+                "Dengue": "Stay hydrated and monitor platelet levels.",
+                "Asthma": "Avoid dust, smoke and allergens.",
+                "Food Poisoning": "Consume oral rehydration solutions.",
+                "Pneumonia": "Get adequate rest and stay hydrated.",
+                "Migraine": "Avoid bright lights and get proper rest.",
+                "Vertigo": "Avoid sudden movements and stay hydrated.",
+                "Gastritis": "Avoid spicy food and caffeine.",
+                "IBS": "Maintain a balanced diet with fiber.",
+                "Allergy": "Identify and avoid allergens.",
+                "Eczema": "Keep skin moisturized and avoid irritants.",
+                "Fungal Infection": "Keep affected area dry and clean.",
+                "Diabetes": "Monitor blood sugar levels regularly.",
+                "Hypertension": "Reduce salt intake and exercise regularly.",
+                "Bronchitis": "Stay hydrated and avoid smoke."
+            }
+
+            for i, pred in enumerate(predictions):
 
                 st.markdown(f"""
                 <div style="
@@ -294,29 +379,38 @@ elif st.session_state.logged_in:
                     Confidence: {pred['confidence']}%
                 </div>
 
-                <br>
-
-                <div style="
-                    color:#9ca3af;
-                    font-size:20px;
-                ">
-                    Recommended Doctor: {pred['doctor']}
-                </div>
-
                 </div>
                 """, unsafe_allow_html=True)
+
+                st.markdown(f"""
+                ### 👨‍⚕️ Recommended Specialist
+
+                **{pred['doctor']}**
+
+                This specialist commonly treats conditions related to the predicted disease.
+                """)
+
+                st.info(
+                    health_tips.get(
+                        pred["disease"],
+                        "Maintain a healthy lifestyle and consult a healthcare professional."
+                    )
+                )
+
+                st.write("---")
 
             save_history(
                 st.session_state.username,
                 {
                     "input": symptoms,
-                    "prediction": predictions
+                    "prediction": predictions,
+                    "timestamp": datetime.now().strftime("%d-%m-%Y %H:%M")
                 }
             )
 
     st.write("---")
 
-    if st.button("Show History"):
+    if st.button("📋 Show Medical Assessment History"):
 
         history = get_history(
             st.session_state.username
@@ -325,26 +419,30 @@ elif st.session_state.logged_in:
         if not history:
 
             st.info(
-                "No history available."
+                "No assessment history available yet."
             )
 
         else:
 
-            st.subheader(
-                "Prediction History"
-            )
+            st.markdown("""
+            ### 📋 Medical Assessment History
+            """)
 
             for item in reversed(history):
 
-                st.write(
-                    f"Symptoms: {item['input']}"
+                timestamp = item.get(
+                    "timestamp",
+                    "N/A"
                 )
+
+                st.write(f"**Date/Time:** {timestamp}")
+                st.write(f"**Symptoms:** {item['input']}")
 
                 for pred in item["prediction"]:
 
                     st.write(
-                        f"- {pred['disease']} "
-                        f"({pred['confidence']}%)"
+                        f"• **{pred['disease']}** ({pred['confidence']}%) "
+                        f"→ {pred['doctor']}"
                     )
 
                 st.write("---")
@@ -352,7 +450,22 @@ elif st.session_state.logged_in:
     st.markdown("---")
 
     st.markdown("""
-    <center>
+    ### 🚀 Upcoming Features
+
+    • Random Forest Disease Prediction
+    • Hospital Integration
+    • Appointment Booking
+    • PDF Medical Reports
+    • Cloud Database
+    • AI Chatbot
+    • Voice Symptom Input
+    • Multi-language Support
+    """)
+
+    st.markdown("---")
+
+    st.markdown("""
+    <center style="color:#9ca3af;">
 
     AI Disease Prediction System
 
