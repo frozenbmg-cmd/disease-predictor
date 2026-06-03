@@ -6,6 +6,16 @@ st.set_page_config(
     layout="wide"
 )
 
+# Session Variables
+if "page" not in st.session_state:
+    st.session_state.page = "register"
+
+if "logged_in" not in st.session_state:
+    st.session_state.logged_in = False
+
 st.title("🩺 AI Health Assistant")
 
-st.success("Application Loaded Successfully")
+st.success("Session Initialized Successfully")
+
+st.write("Current Page:", st.session_state.page)
+st.write("Logged In:", st.session_state.logged_in)
