@@ -14,6 +14,7 @@ st.set_page_config(
     layout="wide"
 )
 
+
 # ---------------- SESSION ----------------
 if "page" not in st.session_state:
     st.session_state.page = "register"
