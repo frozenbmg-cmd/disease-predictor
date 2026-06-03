@@ -37,10 +37,10 @@ def predict_disease(features):
             if features.get(symptom):
                 score += weight
 
-        confidence = round(
-            (score / total) * 100,
-            2
-        )
+       confidence = round(
+    (score / total) * 85,
+    2
+)
 
         if confidence > 0:
 
