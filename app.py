@@ -3,6 +3,7 @@ from auth import register, login, save_history, get_history
 from symptom_extractor import extract, is_medical_input
 from prediction_engine import predict_disease
 from datetime import datetime
+import time
 
 
 # ---------------- PAGE CONFIG ----------------
@@ -17,17 +18,6 @@ st.markdown("""
 
 .stApp{
     background:#050816;
-}
-
-.main-title{
-    font-size:55px;
-    font-weight:700;
-    color:white;
-}
-
-.subtitle{
-    color:#9ca3af;
-    font-size:18px;
 }
 
 .hero-section{
@@ -51,21 +41,67 @@ st.markdown("""
     line-height:1.6;
 }
 
-.result-card{
+.chat-input-container{
+    background:#101b32;
+    padding:20px;
+    border-radius:18px;
+    border:2px solid #1e293b;
+    margin-top:10px;
+}
+
+.ai-response{
+    background:#0f172a;
+    padding:20px;
+    border-radius:15px;
+    margin-top:10px;
+    border-left:4px solid #00ff99;
+}
+
+.prediction-card{
     background:#101b32;
     padding:25px;
     border-radius:18px;
     margin-top:15px;
+    border-left:6px solid;
 }
 
-.prediction-title{
+.risk-low{
+    border-left-color:#00ff99;
+}
+
+.risk-moderate{
+    border-left-color:#facc15;
+}
+
+.risk-high{
+    border-left-color:#ff4d4d;
+}
+
+.disease-name{
     font-size:32px;
     font-weight:bold;
+    margin-bottom:15px;
 }
 
-.doctor{
+.confidence-badge{
+    font-size:24px;
+    font-weight:bold;
+    margin-bottom:15px;
+}
+
+.specialist-label{
     color:#9ca3af;
-    font-size:18px;
+    font-size:14px;
+    margin-top:15px;
+}
+
+.health-tip{
+    background:#0f172a;
+    padding:15px;
+    border-radius:10px;
+    margin-top:10px;
+    border-left:3px solid #00ff99;
+    color:#cbd5e1;
 }
 
 footer{
@@ -211,9 +247,6 @@ elif st.session_state.logged_in:
         st.success(
             f"Welcome {st.session_state.username}"
         )
-        st.caption(
-            "AI-powered healthcare assistant ready for symptom analysis."
-        )
 
     with col2:
 
@@ -226,254 +259,277 @@ elif st.session_state.logged_in:
 
     st.write("---")
 
-    st.write("### 💬 Describe Your Symptoms")
+    left_col, right_col = st.columns([1.2, 0.8])
 
-    symptoms = st.text_input(
-        "",
-        placeholder="Example: I have fever and body pain for 2 days"
-    )
+    with left_col:
 
-    if st.button("Predict"):
+        st.markdown("""
+        ### 💬 Describe Your Symptoms
+        """)
 
-        if not is_medical_input(symptoms):
+        symptoms = st.text_area(
+            "",
+            placeholder="Describe your symptoms naturally...\n\nExample:\nI have had fever, headache and body pain for 2 days.",
+            height=150
+        )
 
-            st.error(
-                "Please enter valid medical symptoms."
-            )
+        if st.button("🔍 Analyze Symptoms", use_container_width=True):
 
-        else:
+            if not is_medical_input(symptoms):
 
-            features = extract(symptoms)
+                st.error(
+                    "Please enter valid medical symptoms."
+                )
 
-            detected_symptoms = [k for k, v in features.items() if v]
+            else:
 
-            st.markdown("""
-            ### 🤖 AI Analysis
-            """)
+                with st.spinner("🤖 AI is analyzing symptoms..."):
+                    time.sleep(1.5)
 
-            st.info(
-                f"**Detected Symptoms:** {', '.join(detected_symptoms)}\n\n"
-                f"**Status:** Analyzing {25}+ diseases..."
-            )
-
-            # Emergency Alert
-            if (
-                features["chest pain"]
-                and features["breathlessness"]
-            ):
+                features = extract(symptoms)
+                detected_symptoms = [k for k, v in features.items() if v]
 
                 st.markdown("""
-                ### 🚨 Critical Symptom Combination Detected
+                <div class='ai-response'>
 
-                **Possible Causes:**
-                • Severe Asthma
-                • Pneumonia
-                • Cardiac Conditions
+                🤖 <b>AI Assistant</b>
 
-                **Recommended Action:**
-                • Visit Emergency Department
-                • Seek Immediate Medical Advice
-                • Avoid Physical Exertion
-                """)
+                I analyzed your symptoms and detected:
 
-            predictions = predict_disease(
-                features
-            )
+                """ + "".join([f"<br>• {symptom.title()}" for symptom in detected_symptoms]) + """
 
-            st.write("---")
-
-            st.markdown("""
-            ### 📊 Health Risk Assessment
-            """)
-
-            if predictions[0]["confidence"] > 70:
-                st.success("✅ Low Risk - Monitor Regularly")
-            elif predictions[0]["confidence"] > 50:
-                st.warning("⚠️ Moderate Risk - Consult Doctor")
-            else:
-                st.error("🔴 High Risk - Seek Medical Attention")
-
-            st.write("---")
-
-            st.markdown("""
-            ### 📈 Analytics Dashboard
-            """)
-
-            col1, col2, col3, col4 = st.columns(4)
-
-            col1.metric(
-                "Symptoms Detected",
-                len(detected_symptoms)
-            )
-
-            col2.metric(
-                "Predictions",
-                len(predictions)
-            )
-
-            col3.metric(
-                "Top Confidence",
-                f"{predictions[0]['confidence']}%"
-            )
-
-            col4.metric(
-                "Status",
-                "Completed"
-            )
-
-            st.write("---")
-
-            st.markdown("""
-            ### 🎯 Prediction Results
-            """)
-
-            colors = [
-                "#00ff99",
-                "#facc15",
-                "#ff4d4d"
-            ]
-
-            health_tips = {
-                "Flu": "Drink fluids and get adequate rest.",
-                "Dengue": "Stay hydrated and monitor platelet levels.",
-                "Asthma": "Avoid dust, smoke and allergens.",
-                "Food Poisoning": "Consume oral rehydration solutions.",
-                "Pneumonia": "Get adequate rest and stay hydrated.",
-                "Migraine": "Avoid bright lights and get proper rest.",
-                "Vertigo": "Avoid sudden movements and stay hydrated.",
-                "Gastritis": "Avoid spicy food and caffeine.",
-                "IBS": "Maintain a balanced diet with fiber.",
-                "Allergy": "Identify and avoid allergens.",
-                "Eczema": "Keep skin moisturized and avoid irritants.",
-                "Fungal Infection": "Keep affected area dry and clean.",
-                "Diabetes": "Monitor blood sugar levels regularly.",
-                "Hypertension": "Reduce salt intake and exercise regularly.",
-                "Bronchitis": "Stay hydrated and avoid smoke."
-            }
-
-            for i, pred in enumerate(predictions):
-
-                st.markdown(f"""
-                <div style="
-                    background:#101b32;
-                    padding:25px;
-                    border-radius:18px;
-                    margin-top:15px;
-                    border-left:6px solid {colors[i]};
-                ">
-
-                <div style="
-                    color:{colors[i]};
-                    font-size:38px;
-                    font-weight:bold;
-                ">
-                    {i+1}. {pred['disease']}
-                </div>
-
-                <br>
-
-                <div style="
-                    color:white;
-                    font-size:28px;
-                ">
-                    Confidence: {pred['confidence']}%
-                </div>
+                <br><br>Checking against medical knowledge base...
 
                 </div>
                 """, unsafe_allow_html=True)
 
-                st.markdown(f"""
-                ### 👨‍⚕️ Recommended Specialist
+                # Emergency Alert
+                if (
+                    features.get("chest pain")
+                    and features.get("breathlessness")
+                ):
 
-                **{pred['doctor']}**
+                    st.markdown("""
+                    <div style="
+                    background:#3d1f1f;
+                    padding:20px;
+                    border-radius:15px;
+                    border-left:6px solid #ff4d4d;
+                    margin-top:15px;
+                    ">
 
-                This specialist commonly treats conditions related to the predicted disease.
-                """)
+                    <div style="color:#ff4d4d;font-size:20px;font-weight:bold;">
+                    🚨 CRITICAL HEALTH ALERT
+                    </div>
+
+                    <div style="color:#cbd5e1;margin-top:10px;">
+                    <b>Detected combination:</b>
+                    <br>• Chest Pain
+                    <br>• Breathlessness
+                    </div>
+
+                    <div style="color:#cbd5e1;margin-top:10px;">
+                    <b>Potential Concern:</b>
+                    <br>• Severe Respiratory Condition
+                    <br>• Cardiac Issue
+                    </div>
+
+                    <div style="color:#ff4d4d;margin-top:10px;font-weight:bold;">
+                    ⚠️ Action Required: Consult a doctor immediately.
+                    </div>
+
+                    </div>
+                    """, unsafe_allow_html=True)
+
+                predictions = predict_disease(
+                    features
+                )
+
+                st.markdown("---")
+
+                col1, col2, col3, col4 = st.columns(4)
+
+                col1.metric(
+                    "Symptoms Found",
+                    len(detected_symptoms)
+                )
+
+                col2.metric(
+                    "Diseases Checked",
+                    25
+                )
+
+                col3.metric(
+                    "Top Match",
+                    predictions[0]["disease"]
+                )
+
+                col4.metric(
+                    "Confidence",
+                    f"{predictions[0]['confidence']}%"
+                )
+
+                st.markdown("---")
+
+                health_tips = {
+                    "Flu": "Stay hydrated and get adequate rest. Avoid contact with others.",
+                    "Dengue": "Drink fluids and monitor platelet levels regularly.",
+                    "Asthma": "Avoid dust, smoke and allergens. Use prescribed inhalers.",
+                    "Food Poisoning": "Consume oral rehydration solutions and bland food.",
+                    "Pneumonia": "Get adequate rest and stay hydrated. Take antibiotics if prescribed.",
+                    "Migraine": "Avoid bright lights and get proper rest in a quiet room.",
+                    "Vertigo": "Avoid sudden movements and stay hydrated.",
+                    "Gastritis": "Avoid spicy food, caffeine and acidic drinks.",
+                    "IBS": "Maintain a balanced diet with adequate fiber.",
+                    "Allergy": "Identify and avoid allergens. Use antihistamines if needed.",
+                    "Eczema": "Keep skin moisturized and avoid irritants.",
+                    "Fungal Infection": "Keep affected area dry and clean.",
+                    "Diabetes": "Monitor blood sugar levels regularly and exercise.",
+                    "Hypertension": "Reduce salt intake and exercise regularly.",
+                    "Bronchitis": "Stay hydrated and avoid smoke and pollution."
+                }
+
+                for i, pred in enumerate(predictions):
+
+                    colors = ["#00ff99", "#facc15", "#ff4d4d"]
+                    risk_levels = ["Low", "Moderate", "High"]
+                    risk_class = ["risk-low", "risk-moderate", "risk-high"][i]
+
+                    st.markdown(f"""
+                    <div class='prediction-card {risk_class}'>
+
+                    <div style="display:flex;justify-content:space-between;align-items:start;">
+
+                    <div class='disease-name' style="color:{colors[i]};">
+                    {i+1}. {pred['disease']}
+                    </div>
+
+                    <div style="background:{colors[i]};color:black;padding:8px 16px;border-radius:20px;font-weight:bold;">
+                    {risk_levels[i]} Risk
+                    </div>
+
+                    </div>
+
+                    <div class='confidence-badge' style="color:{colors[i]};">
+                    Confidence: {pred['confidence']}%
+                    </div>
+
+                    <div style="color:#9ca3af;font-size:16px;">
+                    <b>👨‍⚕️ Recommended Specialist:</b><br>
+                    {pred['doctor']}
+                    </div>
+
+                    <div style="color:#cbd5e1;margin-top:15px;">
+                    <b>📋 Recommendation:</b><br>
+                    Schedule a consultation with {pred['doctor'].lower()} for proper evaluation.
+                    </div>
+
+                    </div>
+                    """, unsafe_allow_html=True)
+
+                    st.markdown(f"""
+                    <div class='health-tip'>
+                    💡 <b>Health Tip:</b> {health_tips.get(pred['disease'], 'Maintain healthy habits and consult healthcare professional.')}
+                    </div>
+                    """, unsafe_allow_html=True)
+
+                    st.write("")
+
+                save_history(
+                    st.session_state.username,
+                    {
+                        "input": symptoms,
+                        "prediction": predictions,
+                        "timestamp": datetime.now().strftime("%d-%m-%Y %H:%M")
+                    }
+                )
+
+    with right_col:
+
+        st.markdown("""
+        ### 📊 Quick Stats
+        """)
+
+        st.metric("Predictions Made", "0", delta=None)
+
+        st.write("")
+
+        st.markdown("""
+        ### 📋 Assessment History
+        """)
+
+        if st.button("📜 View History", use_container_width=True):
+
+            history = get_history(
+                st.session_state.username
+            )
+
+            if not history:
 
                 st.info(
-                    health_tips.get(
-                        pred["disease"],
-                        "Maintain a healthy lifestyle and consult a healthcare professional."
-                    )
+                    "No assessment history yet."
                 )
 
-                st.write("---")
+            else:
 
-            save_history(
-                st.session_state.username,
-                {
-                    "input": symptoms,
-                    "prediction": predictions,
-                    "timestamp": datetime.now().strftime("%d-%m-%Y %H:%M")
-                }
-            )
+                for item in reversed(history[:5]):
 
-    st.write("---")
-
-    if st.button("📋 Show Medical Assessment History"):
-
-        history = get_history(
-            st.session_state.username
-        )
-
-        if not history:
-
-            st.info(
-                "No assessment history available yet."
-            )
-
-        else:
-
-            st.markdown("""
-            ### 📋 Medical Assessment History
-            """)
-
-            for item in reversed(history):
-
-                timestamp = item.get(
-                    "timestamp",
-                    "N/A"
-                )
-
-                st.write(f"**Date/Time:** {timestamp}")
-                st.write(f"**Symptoms:** {item['input']}")
-
-                for pred in item["prediction"]:
-
-                    st.write(
-                        f"• **{pred['disease']}** ({pred['confidence']}%) "
-                        f"→ {pred['doctor']}"
+                    timestamp = item.get(
+                        "timestamp",
+                        "N/A"
                     )
 
-                st.write("---")
+                    st.markdown(f"""
+                    <div style="
+                    background:#101b32;
+                    padding:12px;
+                    border-radius:10px;
+                    margin-top:8px;
+                    ">
 
-    st.markdown("---")
+                    <div style="color:#00ff99;font-size:12px;font-weight:bold;">
+                    {timestamp}
+                    </div>
 
-    st.markdown("""
-    ### 🚀 Upcoming Features
+                    <div style="color:#cbd5e1;font-size:12px;margin-top:5px;">
+                    {item['input'][:50]}...
+                    </div>
 
-    • Random Forest Disease Prediction
-    • Hospital Integration
-    • Appointment Booking
-    • PDF Medical Reports
-    • Cloud Database
-    • AI Chatbot
-    • Voice Symptom Input
-    • Multi-language Support
-    """)
+                    <div style="color:#facc15;font-size:12px;margin-top:5px;">
+                    Top: {item['prediction'][0]['disease']}
+                    </div>
+
+                    </div>
+                    """, unsafe_allow_html=True)
+
+        st.write("")
+
+        st.markdown("""
+        ### 🚀 Features Coming Soon
+
+        • PDF Reports
+        • Hospital Booking
+        • AI Chatbot
+        • Voice Input
+        • Multi-language
+        """)
 
     st.markdown("---")
 
     st.markdown("""
     <center style="color:#9ca3af;">
 
-    AI Disease Prediction System
+    🏥 AI Healthcare Assistant
 
-    Developed By
+    Developed using Python, Streamlit and AI-based Weighted Symptom Matching.
+
+    <br>
 
     Bharath M Gowda (1NH24CS040)
 
     Mohammed Kasim G (1NH25CS416)
+
+    © 2026
 
     </center>
     """, unsafe_allow_html=True)
