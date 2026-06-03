@@ -11,6 +11,48 @@ st.set_page_config(
     layout="wide"
 )
 
+st.markdown("""
+<style>
+
+.stApp{
+    background:#050816;
+}
+
+.main-title{
+    font-size:55px;
+    font-weight:700;
+    color:white;
+}
+
+.subtitle{
+    color:#9ca3af;
+    font-size:18px;
+}
+
+.result-card{
+    background:#101b32;
+    padding:25px;
+    border-radius:18px;
+    margin-top:15px;
+}
+
+.prediction-title{
+    font-size:32px;
+    font-weight:bold;
+}
+
+.doctor{
+    color:#9ca3af;
+    font-size:18px;
+}
+
+footer{
+    visibility:hidden;
+}
+
+</style>
+""", unsafe_allow_html=True)
+
 
 # ---------------- SESSION ----------------
 if "page" not in st.session_state:
@@ -131,7 +173,15 @@ elif (
 # =====================================================
 elif st.session_state.logged_in:
 
-    st.title("🩺 AI Disease Prediction System")
+    st.markdown("""
+    <div class='main-title'>
+    🩺 AI Disease Prediction System
+    </div>
+
+    <div class='subtitle'>
+    Intelligent Symptom Analysis and Healthcare Assistance
+    </div>
+    """, unsafe_allow_html=True)
 
     col1, col2 = st.columns([5, 1])
 
@@ -152,9 +202,11 @@ elif st.session_state.logged_in:
 
     st.write("---")
 
+    st.write("### Enter Symptoms")
+
     symptoms = st.text_input(
-        "Enter symptoms separated by commas",
-        placeholder="fever, cough, headache"
+        "",
+        placeholder="Example: fever, cough, body pain"
     )
 
     if st.button("Predict"):
@@ -187,6 +239,25 @@ elif st.session_state.logged_in:
                 "Prediction Results"
             )
 
+            col1, col2, col3 = st.columns(3)
+
+            col1.metric(
+                "Diseases",
+                len(predictions)
+            )
+
+            col2.metric(
+                "Top Confidence",
+                f"{predictions[0]['confidence']}%"
+            )
+
+            col3.metric(
+                "Status",
+                "Analyzed"
+            )
+
+            st.write("---")
+
             colors = [
                 "#00ff99",
                 "#facc15",
@@ -197,34 +268,43 @@ elif st.session_state.logged_in:
                 predictions
             ):
 
-                st.markdown(
-                    f"""
-                    <div style="
-                        background:#101b32;
-                        padding:20px;
-                        border-radius:15px;
-                        margin-top:15px;
-                        border-left:5px solid {colors[i]};
-                    ">
+                st.markdown(f"""
+                <div style="
+                    background:#101b32;
+                    padding:25px;
+                    border-radius:18px;
+                    margin-top:15px;
+                    border-left:6px solid {colors[i]};
+                ">
 
-                    <h2 style="color:{colors[i]};">
+                <div style="
+                    color:{colors[i]};
+                    font-size:38px;
+                    font-weight:bold;
+                ">
                     {i+1}. {pred['disease']}
-                    </h2>
+                </div>
 
-                    <h4 style="color:white;">
-                    Confidence:
-                    {pred['confidence']}%
-                    </h4>
+                <br>
 
-                    <p style="color:white;">
-                    Doctor:
-                    {pred['doctor']}
-                    </p>
+                <div style="
+                    color:white;
+                    font-size:28px;
+                ">
+                    Confidence: {pred['confidence']}%
+                </div>
 
-                    </div>
-                    """,
-                    unsafe_allow_html=True
-                )
+                <br>
+
+                <div style="
+                    color:#9ca3af;
+                    font-size:20px;
+                ">
+                    Recommended Doctor: {pred['doctor']}
+                </div>
+
+                </div>
+                """, unsafe_allow_html=True)
 
             save_history(
                 st.session_state.username,
@@ -271,8 +351,16 @@ elif st.session_state.logged_in:
 
     st.markdown("---")
 
-    st.caption(
-        "AI-assisted disease prediction system. "
-        "For educational purposes only. "
-        "Not a replacement for professional medical diagnosis."
-    )
+    st.markdown("""
+    <center>
+
+    AI Disease Prediction System
+
+    Developed By
+
+    Bharath M Gowda (1NH24CS040)
+
+    Mohammed Kasim G (1NH25CS416)
+
+    </center>
+    """, unsafe_allow_html=True)
