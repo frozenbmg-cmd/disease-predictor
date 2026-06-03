@@ -42,7 +42,7 @@ def predict_disease(features):
     2
 )
 
-        if confidence > 0:
+       if confidence >= 20:
 
             results.append({
 
