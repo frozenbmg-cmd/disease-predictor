@@ -37,17 +37,16 @@ def predict_disease(features):
             if features.get(symptom):
                 score += weight
 
-       confidence = round(
-    (score / total) * 85,
-    2
-)
+        confidence = round(
+            (score / total) * 85,
+            2
+        )
 
-       if confidence >= 20:
+        if confidence >= 20:
 
             results.append({
 
                 "disease": disease,
-
                 "confidence": confidence,
 
                 "doctor": doctor_map.get(
