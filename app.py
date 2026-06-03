@@ -95,38 +95,28 @@ elif st.session_state.page == "login" and not st.session_state.logged_in:
 # ---------------- MAIN PAGE ----------------
 elif st.session_state.logged_in:
 
-    from symptom_extractor import (
-        extract,
-        is_medical_input
-    )
-
-    from prediction_engine import (
-        predict_disease
-    )
+    from symptom_extractor import extract, is_medical_input
+    from prediction_engine import predict_disease
 
     st.title("🩺 AI Disease Prediction System")
 
     col1, col2 = st.columns([5, 1])
 
     with col1:
-
         st.success(
             f"Welcome {st.session_state.username}"
         )
 
     with col2:
-
         if st.button("Logout"):
-
             st.session_state.logged_in = False
             st.session_state.page = "login"
-
             st.rerun()
 
     st.write("---")
 
     symptoms = st.text_input(
-        "Enter Symptoms",
+        "Enter symptoms separated by commas",
         placeholder="fever, cough, headache"
     )
 
@@ -135,22 +125,27 @@ elif st.session_state.logged_in:
         if not is_medical_input(symptoms):
 
             st.error(
-                "Please enter valid symptoms."
+                "Please enter valid medical symptoms."
             )
 
         else:
 
             features = extract(symptoms)
 
-            predictions = predict_disease(
-                features
-            )
+            # Emergency Detection
+            if (
+                features["chest pain"]
+                and features["breathlessness"]
+            ):
 
-            st.subheader(
-                "Prediction Results"
-            )
+                st.error(
+                    "🚨 Emergency Alert: Possible serious respiratory or cardiac condition detected. Please consult a doctor immediately."
+                )
 
-            colors = [
+            predictions = predict_disease(features)
+
+            st.subheader("Prediction Results")
+ colors = [
                 "#00ff99",
                 "#facc15",
                 "#ff4d4d"
@@ -166,20 +161,55 @@ elif st.session_state.logged_in:
                     margin-top:15px;
                     border-left:5px solid {colors[i]};
                 ">
+                    <h2 style="color:{colors[i]};">
+                    {i+1}. {pred['disease']}
+                    </h2>
 
-                <h2 style="color:{colors[i]};">
-                {i+1}. {pred['disease']}
-                </h2>
+                    <h4 style="color:white;">
+                    Confidence: {pred['confidence']}%
+                    </h4>
 
-                <h4 style="color:white;">
-                Confidence:
-                {pred['confidence']}%
-                </h4>
-
-                <p style="color:white;">
-                Doctor:
-                {pred['doctor']}
-                </p>
-
+                    <p style="color:white;">
+                    Doctor: {pred['doctor']}
+                    </p>
                 </div>
                 """, unsafe_allow_html=True)
+
+            save_history(
+                st.session_state.username,
+                {
+                    "input": symptoms,
+                    "prediction": predictions
+                }
+            )
+
+    st.write("---")
+
+    if st.button("Show History"):
+
+        history = get_history(
+            st.session_state.username
+        )
+
+        if not history:
+
+            st.info("No history available.")
+
+        else:
+
+            st.subheader("Prediction History")
+
+            for item in reversed(history):
+
+                st.write(
+                    f"Symptoms: {item['input']}"
+                )
+
+                for pred in item["prediction"]:
+
+                    st.write(
+                        f"- {pred['disease']} "
+                        f"({pred['confidence']}%)"
+                    )
+
+                st.write("---")
