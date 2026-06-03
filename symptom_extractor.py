@@ -1,149 +1,120 @@
-
-SYMPTOMS = [
-
-    "fever",
-    "cough",
-    "headache",
-    "fatigue",
-    "body pain",
-    "diarrhea",
-    "vomiting",
-    "sore throat",
-    "chills",
-    "nausea",
-    "runny nose",
-    "running nose",
-    "congestion",
-    "sneezing",
-    "dizziness",
-    "stomach pain",
-    "bloating",
-    "breathlessness",
-    "rash",
-    "itching",
-    "chest pain",
-    "joint pain",
-    "loss of taste",
-    "acidity",
-    "constipation",
-    "weakness",
-    "abdominal pain",
-    "sweating",
-    "eye redness",
-    "ear pain"
-]
-
-# ---------------- VALIDATION ----------------
-def is_medical_input(text):
-
-    text = text.lower()
-
-    for symptom in SYMPTOMS:
-
-        if symptom in text:
-            return True
-
-    return False
-
-# ---------------- EXTRACTION ----------------
 def extract(text):
 
-    text = text.lower()
+```
+text = text.lower()
 
-    return {
+return {
 
-        "fever": any(x in text for x in [
-            "fever",
-            "temperature",
-            "high temperature"
-        ]),
+    "fever": any(x in text for x in [
+        "fever",
+        "temperature",
+        "high temperature"
+    ]),
 
-        "cough": "cough" in text,
+    "cough": any(x in text for x in [
+        "cough",
+        "coughing"
+    ]),
 
-        "headache": any(x in text for x in [
-    "headache",
-    "head pain"
-]),
-       "fatigue": any(x in text for x in [
-    "fatigue",
-    "tired",
-    "weak",
-    "exhausted",
-    "no energy"
-]),
+    "headache": any(x in text for x in [
+        "headache",
+        "head pain"
+    ]),
 
-        "body pain": any(x in text for x in [
-            "body pain",
-            "body ache"
-        ]),
+    "fatigue": any(x in text for x in [
+        "fatigue",
+        "tired",
+        "weak",
+        "exhausted",
+        "no energy"
+    ]),
 
-        "diarrhea": any(x in text for x in [
-            "diarrhea",
-            "loose motion"
-        ]),
+    "body pain": any(x in text for x in [
+        "body pain",
+        "body ache",
+        "muscle pain"
+    ]),
 
-        "vomiting": any(x in text for x in [
-            "vomiting",
-            "vomit"
-        ]),
+    "diarrhea": any(x in text for x in [
+        "diarrhea",
+        "loose motion"
+    ]),
 
-        "sore throat": "sore throat" in text,
+    "vomiting": any(x in text for x in [
+        "vomiting",
+        "vomit"
+    ]),
 
-        "chills": any(x in text for x in [
-            "chills",
-            "shivering"
-        ]),
+    "sore throat": "sore throat" in text,
 
-        "nausea": "nausea" in text,
+    "chills": any(x in text for x in [
+        "chills",
+        "shivering"
+    ]),
 
-       "runny nose": any(x in text for x in [
-    "runny nose",
-    "running nose",
-    "nasal discharge"
-]),
+    "nausea": "nausea" in text,
 
-        "congestion": "congestion" in text,
+    "runny nose": any(x in text for x in [
+        "runny nose",
+        "running nose",
+        "nasal discharge"
+    ]),
 
-        "sneezing": "sneezing" in text,
+    "congestion": "congestion" in text,
 
-        "dizziness": "dizziness" in text,
+    "sneezing": "sneezing" in text,
 
-        "stomach pain": any(x in text for x in [
-            "stomach pain",
-            "stomach ache"
-        ]),
+    "dizziness": any(x in text for x in [
+        "dizziness",
+        "giddiness"
+    ]),
 
-        "bloating": "bloating" in text,
+    "stomach pain": any(x in text for x in [
+        "stomach pain",
+        "stomach ache"
+    ]),
 
-        "breathlessness": any(x in text for x in [
-            "breathlessness",
-            "shortness of breath"
-        ]),
+    "bloating": "bloating" in text,
 
-        "rash": "rash" in text,
+    "breathlessness": any(x in text for x in [
+        "breathlessness",
+        "shortness of breath"
+    ]),
 
-        "itching": "itching" in text,
+    "rash": "rash" in text,
 
-        "chest pain": "chest pain" in text,
+    "itching": "itching" in text,
 
-        "joint pain": "joint pain" in text,
+    "chest pain": "chest pain" in text,
 
-        "loss of taste": "loss of taste" in text,
+    "joint pain": "joint pain" in text,
 
-        "acidity": "acidity" in text,
+    "loss of taste": any(x in text for x in [
+        "loss of taste",
+        "cannot taste"
+    ]),
 
-        "constipation": "constipation" in text,
+    "acidity": any(x in text for x in [
+        "acidity",
+        "acid reflux"
+    ]),
 
-        "weakness": "weakness" in text,
+    "constipation": "constipation" in text,
 
-        "abdominal pain": "abdominal pain" in text,
+    "weakness": "weakness" in text,
 
-        "sweating": "sweating" in text,
+    "abdominal pain": "abdominal pain" in text,
 
-        "eye redness": any(x in text for x in [
-            "eye redness",
-            "red eyes"
-        ]),
+    "sweating": any(x in text for x in [
+        "sweating",
+        "excess sweating"
+    ]),
 
-        "ear pain": "ear pain" in text
-    }
+    "eye redness": any(x in text for x in [
+        "eye redness",
+        "red eyes"
+    ]),
+
+    "ear pain": "ear pain" in text
+}
+```
