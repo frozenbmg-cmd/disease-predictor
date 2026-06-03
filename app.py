@@ -3,23 +3,21 @@ from auth import register, login, save_history, get_history
 from symptom_extractor import extract, is_medical_input
 from prediction_engine import predict_disease
 
----------------- PAGE CONFIG ----------------
+
 st.set_page_config(
 page_title="AI Health Assistant",
 page_icon="🩺",
 layout="wide"
 )
 
----------------- SESSION ----------------
+
 if "page" not in st.session_state:
 st.session_state.page = "register"
 
 if "logged_in" not in st.session_state:
 st.session_state.logged_in = False
 
-=====================================================
-REGISTER PAGE
-=====================================================
+
 if st.session_state.page == "register" and not st.session_state.logged_in:
 
 st.title("🩺 AI Health Assistant")
@@ -51,9 +49,7 @@ if st.button("Go to Login"):
 
     st.session_state.page = "login"
     st.rerun()
-=====================================================
-LOGIN PAGE
-=====================================================
+
 elif st.session_state.page == "login" and not st.session_state.logged_in:
 
 st.title("🔐 Login")
@@ -92,9 +88,7 @@ if st.button("Create Account"):
 
     st.session_state.page = "register"
     st.rerun()
-=====================================================
-MAIN APPLICATION
-=====================================================
+
 elif st.session_state.logged_in:
 
 st.title("🩺 AI Healthcare Assistant")
