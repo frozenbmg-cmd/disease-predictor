@@ -1,10 +1,7 @@
 import streamlit as st
-from auth import (
-    register,
-    login,
-    save_history,
-    get_history
-)
+from auth import register, login, save_history, get_history
+from symptom_extractor import extract, is_medical_input
+from prediction_engine import predict_disease
 
 
 # ---------------- PAGE CONFIG ----------------
@@ -133,9 +130,6 @@ elif (
 # MAIN APPLICATION
 # =====================================================
 elif st.session_state.logged_in:
-
-    from symptom_extractor import extract, is_medical_input
-    from prediction_engine import predict_disease
 
     st.title("🩺 AI Disease Prediction System")
 
