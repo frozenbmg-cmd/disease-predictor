@@ -1,5 +1,6 @@
 def extract(text):
 
+    
     text = text.lower()
 
     return {
