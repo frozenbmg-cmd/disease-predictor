@@ -89,21 +89,94 @@ elif st.session_state.page == "login" and not st.session_state.logged_in:
         st.rerun()
 
 # ---------------- MAIN PAGE ----------------
+# ---------------- MAIN PAGE ----------------
 elif st.session_state.logged_in:
 
-    st.title("🩺 AI Health Assistant")
-
-    st.success(
-        f"Welcome {st.session_state.username}"
+    from symptom_extractor import (
+        extract,
+        is_medical_input
     )
 
-    st.write(
-        "Login system working successfully."
+    from prediction_engine import (
+        predict_disease
     )
 
-    if st.button("Logout"):
+    st.title("🩺 AI Disease Prediction System")
 
-        st.session_state.logged_in = False
-        st.session_state.page = "login"
+    col1, col2 = st.columns([5, 1])
 
-        st.rerun()
+    with col1:
+
+        st.success(
+            f"Welcome {st.session_state.username}"
+        )
+
+    with col2:
+
+        if st.button("Logout"):
+
+            st.session_state.logged_in = False
+            st.session_state.page = "login"
+
+            st.rerun()
+
+    st.write("---")
+
+    symptoms = st.text_input(
+        "Enter Symptoms",
+        placeholder="fever, cough, headache"
+    )
+
+    if st.button("Predict"):
+
+        if not is_medical_input(symptoms):
+
+            st.error(
+                "Please enter valid symptoms."
+            )
+
+        else:
+
+            features = extract(symptoms)
+
+            predictions = predict_disease(
+                features
+            )
+
+            st.subheader(
+                "Prediction Results"
+            )
+
+            colors = [
+                "#00ff99",
+                "#facc15",
+                "#ff4d4d"
+            ]
+
+            for i, pred in enumerate(predictions):
+
+                st.markdown(f"""
+                <div style="
+                    background:#101b32;
+                    padding:20px;
+                    border-radius:15px;
+                    margin-top:15px;
+                    border-left:5px solid {colors[i]};
+                ">
+
+                <h2 style="color:{colors[i]};">
+                {i+1}. {pred['disease']}
+                </h2>
+
+                <h4 style="color:white;">
+                Confidence:
+                {pred['confidence']}%
+                </h4>
+
+                <p style="color:white;">
+                Doctor:
+                {pred['doctor']}
+                </p>
+
+                </div>
+                """, unsafe_allow_html=True)
