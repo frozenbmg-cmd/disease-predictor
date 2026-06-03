@@ -105,16 +105,49 @@ elif st.session_state.logged_in:
         else:
 
             features = extract(symptoms)
+            if (
+    features["chest pain"]
+    and features["breathlessness"]
+):
+
+    st.error("""
+    🚨 Emergency Alert
+
+    Possible serious respiratory or cardiac condition detected.
+
+    Please consult a doctor immediately.
+    """)
             predictions = predict_disease(features)
 
             st.subheader("Prediction Results")
 
-            for pred in predictions:
+            for i, pred in enumerate(predictions):
 
-                st.success(
-                    f"{pred['disease']} "
-                    f"({pred['confidence']}%)"
-                )
+    colors = [
+        "#00ff99",
+        "#facc15",
+        "#ff4d4d"
+    ]
+
+    st.markdown(f"""
+    <div style="
+        background:#101b32;
+        padding:20px;
+        border-radius:15px;
+        margin-top:15px;
+        border-left:5px solid {colors[i]};
+    ">
+
+    <h2 style="color:{colors[i]};">
+    {i+1}. {pred['disease']}
+    </h2>
+
+    <h4 style="color:white;">
+    Confidence: {pred['confidence']}%
+    </h4>
+
+    </div>
+    """, unsafe_allow_html=True)
 
             save_history(
                 st.session_state.username,
