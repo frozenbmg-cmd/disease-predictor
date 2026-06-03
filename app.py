@@ -1,188 +1,127 @@
-import streamlit as st
-from auth import register, login, save_history, get_history
-from symptom_extractor import extract, is_medical_input
-from prediction_engine import predict_disease
+# ---------------- MAIN APP ----------------
 
-# ---------------- PAGE CONFIG ----------------
-st.set_page_config(
-    page_title="AI Health Assistant",
-    page_icon="🩺",
-    layout="wide"
-)
+elif st.session_state.logged_in:
 
-# ---------------- SESSION ----------------
-if "page" not in st.session_state:
-    st.session_state.page = "register"
+```
+st.title("🩺 AI Disease Prediction System")
 
-if "logged_in" not in st.session_state:
-    st.session_state.logged_in = False
+col1, col2 = st.columns([5, 1])
 
-# ---------------- REGISTER PAGE ----------------
-if st.session_state.page == "register" and not st.session_state.logged_in:
+with col1:
+    st.write(f"Welcome, **{st.session_state.username}**")
 
-    st.title("🩺 AI Health Assistant")
-    st.subheader("Create Account")
-
-    username = st.text_input("Username")
-    password = st.text_input("Password", type="password")
-    confirm = st.text_input("Confirm Password", type="password")
-
-    if st.button("Register"):
-
-        if password != confirm:
-            st.error("Passwords do not match")
-
-        elif register(username, password):
-            st.success("Registration successful")
-            st.session_state.page = "login"
-            st.rerun()
-
-        else:
-            st.error("Username already exists")
-
-    st.write("---")
-    st.write("Already have an account?")
-
-    if st.button("Go to Login"):
+with col2:
+    if st.button("Logout"):
+        st.session_state.logged_in = False
         st.session_state.page = "login"
         st.rerun()
 
-# ---------------- LOGIN PAGE ----------------
-elif st.session_state.page == "login" and not st.session_state.logged_in:
+st.write("---")
 
-    st.title("🔐 Login")
+symptoms = st.text_input(
+    "Enter symptoms separated by commas",
+    placeholder="fever, cough, headache"
+)
 
-    username = st.text_input("Username", key="login_user")
-    password = st.text_input("Password", type="password", key="login_pass")
+if st.button("Predict"):
 
-    if st.button("Login"):
+    if not is_medical_input(symptoms):
 
-        if login(username, password):
+        st.error("Please enter valid medical symptoms.")
 
-            st.session_state.logged_in = True
-            st.session_state.username = username
-            st.rerun()
+    else:
 
-        else:
-            st.error("Invalid username or password")
+        features = extract(symptoms)
 
-    st.write("---")
-    st.write("New user?")
+        # Emergency Alert
+        if (
+            features["chest pain"]
+            and features["breathlessness"]
+        ):
 
-    if st.button("Create Account"):
-        st.session_state.page = "register"
-        st.rerun()
+            st.error("""
+```
 
-# ---------------- MAIN APP ----------------
-elif st.session_state.logged_in:
+🚨 Emergency Alert
 
-    st.title("🩺 AI Disease Prediction System")
+Possible serious respiratory or cardiac condition detected.
 
-    col1, col2 = st.columns([5, 1])
+Please consult a doctor immediately.
+""")
 
-    with col1:
-        st.write(f"Welcome, **{st.session_state.username}**")
+```
+        predictions = predict_disease(features)
 
-    with col2:
-        if st.button("Logout"):
-            st.session_state.logged_in = False
-            st.session_state.page = "login"
-            st.rerun()
+        st.subheader("Prediction Results")
 
-    st.write("---")
+        colors = [
+            "#00ff99",
+            "#facc15",
+            "#ff4d4d"
+        ]
 
-    symptoms = st.text_input(
-        "Enter symptoms separated by commas",
-        placeholder="fever, cough, headache"
-    )
+        for i, pred in enumerate(predictions):
 
-    if st.button("Predict"):
+            st.markdown(f"""
+            <div style="
+                background:#101b32;
+                padding:20px;
+                border-radius:15px;
+                margin-top:15px;
+                border-left:5px solid {colors[i]};
+            ">
 
-        if not is_medical_input(symptoms):
+            <h2 style="color:{colors[i]};">
+            {i+1}. {pred['disease']}
+            </h2>
 
-            st.error("Please enter valid medical symptoms.")
+            <h4 style="color:white;">
+            Confidence: {pred['confidence']}%
+            </h4>
 
-        else:
+            <p style="color:white;">
+            Doctor: {pred['doctor']}
+            </p>
 
-            features = extract(symptoms)
-            if (
-    features["chest pain"]
-    and features["breathlessness"]
-):
+            </div>
+            """, unsafe_allow_html=True)
 
-    st.error("""
-    🚨 Emergency Alert
-
-    Possible serious respiratory or cardiac condition detected.
-
-    Please consult a doctor immediately.
-    """)
-            predictions = predict_disease(features)
-
-            st.subheader("Prediction Results")
-
-            for i, pred in enumerate(predictions):
-
-    colors = [
-        "#00ff99",
-        "#facc15",
-        "#ff4d4d"
-    ]
-
-    st.markdown(f"""
-    <div style="
-        background:#101b32;
-        padding:20px;
-        border-radius:15px;
-        margin-top:15px;
-        border-left:5px solid {colors[i]};
-    ">
-
-    <h2 style="color:{colors[i]};">
-    {i+1}. {pred['disease']}
-    </h2>
-
-    <h4 style="color:white;">
-    Confidence: {pred['confidence']}%
-    </h4>
-
-    </div>
-    """, unsafe_allow_html=True)
-
-            save_history(
-                st.session_state.username,
-                {
-                    "input": symptoms,
-                    "prediction": predictions
-                }
-            )
-
-    st.write("---")
-
-    if st.button("Show History"):
-
-        history = get_history(
-            st.session_state.username
+        save_history(
+            st.session_state.username,
+            {
+                "input": symptoms,
+                "prediction": predictions
+            }
         )
 
-        if not history:
-            st.info("No history available.")
+st.write("---")
 
-        else:
+if st.button("Show History"):
 
-            st.subheader("Prediction History")
+    history = get_history(
+        st.session_state.username
+    )
 
-            for item in reversed(history):
+    if not history:
+
+        st.info("No history available.")
+
+    else:
+
+        st.subheader("Prediction History")
+
+        for item in reversed(history):
+
+            st.write(
+                f"Symptoms: {item['input']}"
+            )
+
+            for pred in item["prediction"]:
 
                 st.write(
-                    f"Symptoms: {item['input']}"
+                    f"- {pred['disease']} "
+                    f"({pred['confidence']}%)"
                 )
 
-                for pred in item["prediction"]:
-
-                    st.write(
-                        f"- {pred['disease']} "
-                        f"({pred['confidence']}%)"
-                    )
-
-                st.write("---")
+            st.write("---")
+```
