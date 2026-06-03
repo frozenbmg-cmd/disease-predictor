@@ -207,8 +207,6 @@ elif st.session_state.logged_in:
                 predictions
             ):
 
-                color = colors[i % len(colors)]
-
                 st.markdown(
                     f"""
                     <div style="
@@ -216,10 +214,10 @@ elif st.session_state.logged_in:
                         padding:20px;
                         border-radius:15px;
                         margin-top:15px;
-                        border-left:5px solid {color};
+                        border-left:5px solid {colors[i]};
                     ">
 
-                    <h2 style="color:{color};">
+                    <h2 style="color:{colors[i]};">
                     {i+1}. {pred['disease']}
                     </h2>
 
