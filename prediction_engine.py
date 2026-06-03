@@ -24,10 +24,25 @@ def predict_disease(features):
 
         if confidence > 0:
 
-            results.append({
-                "disease": disease,
-                "confidence": confidence
-            })
+           doctor = {
+    "Asthma":"Pulmonologist",
+    "Pneumonia":"Pulmonologist",
+    "Migraine":"Neurologist",
+    "Food Poisoning":"Gastroenterologist",
+    "Allergy":"Dermatologist",
+    "Flu":"General Physician",
+    "Dengue":"General Physician",
+    "Malaria":"General Physician"
+}
+
+results.append({
+    "disease": disease,
+    "confidence": confidence,
+    "doctor": doctor.get(
+        disease,
+        "General Physician"
+    )
+})
 
     results.sort(
         key=lambda x: x["confidence"],
