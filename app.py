@@ -6,6 +6,7 @@ from auth import (
     get_history
 )
 
+
 # ---------------- PAGE CONFIG ----------------
 st.set_page_config(
     page_title="AI Health Assistant",
