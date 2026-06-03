@@ -10,7 +10,7 @@ import time
 st.set_page_config(
     page_title="AI Healthcare Assistant",
     page_icon="🩺",
-    layout="wide"
+    layout="centered"
 )
 
 st.markdown("""
@@ -18,115 +18,99 @@ st.markdown("""
 
 .stApp{
     background:#0B1220;
-    color:#F3F4F6;
+    color:#F8FAFC;
 }
 
-/* MAIN HEADER */
-.header-section{
-    padding:30px 0;
-    margin-bottom:30px;
-}
-
-.header-title{
-    font-size:36px;
-    font-weight:700;
-    color:#F3F4F6;
-    margin-bottom:8px;
-}
-
-.header-subtitle{
-    font-size:16px;
-    color:#9CA3AF;
-    font-weight:400;
-}
-
-.header-tags{
-    margin-top:12px;
-    display:flex;
-    gap:12px;
-}
-
-.tag{
-    background:#1F2937;
-    padding:6px 12px;
-    border-radius:6px;
-    font-size:12px;
-    color:#9CA3AF;
-}
-
-/* PATIENT PROFILE */
-.patient-card{
-    background:#111827;
-    padding:20px;
-    border-radius:8px;
-    border:1px solid #1F2937;
-    margin-bottom:20px;
-}
-
-.card-label{
-    color:#9CA3AF;
-    font-size:12px;
-    text-transform:uppercase;
-    letter-spacing:0.5px;
-    margin-bottom:15px;
-}
-
-.profile-row{
-    display:flex;
-    justify-content:space-between;
-    padding:10px 0;
-    border-bottom:1px solid #1F2937;
-    font-size:14px;
-}
-
-.profile-row:last-child{
-    border-bottom:none;
-}
-
-.profile-key{
-    color:#9CA3AF;
-}
-
-.profile-value{
-    color:#F3F4F6;
-    font-weight:500;
-}
-
-/* INPUT SECTION */
-.input-card{
-    background:#111827;
-    padding:25px;
-    border-radius:8px;
-    border:1px solid #1F2937;
+/* HERO SECTION */
+.hero-container{
+    padding:60px 40px;
+    text-align:center;
+    background:linear-gradient(135deg, #111827 0%, #0B1220 100%);
+    border-radius:12px;
     margin:20px 0;
 }
 
-.input-title{
-    color:#F3F4F6;
-    font-size:16px;
-    font-weight:600;
+.hero-title{
+    font-size:44px;
+    font-weight:700;
+    color:#F8FAFC;
     margin-bottom:12px;
 }
 
-.input-description{
-    color:#9CA3AF;
-    font-size:14px;
-    margin-bottom:15px;
+.hero-subtitle{
+    font-size:18px;
+    color:#94A3B8;
+    margin-bottom:24px;
+    font-weight:400;
 }
 
-/* ANALYSIS SECTION */
-.analysis-card{
+.hero-description{
+    font-size:16px;
+    color:#CBD5E1;
+    line-height:1.6;
+    margin-bottom:30px;
+    max-width:600px;
+    margin-left:auto;
+    margin-right:auto;
+}
+
+.divider{
+    height:1px;
+    background:#1F2937;
+    margin:30px 0;
+}
+
+/* INPUT SECTION */
+.input-container{
+    margin:30px 0;
+}
+
+.input-label{
+    font-size:14px;
+    font-weight:600;
+    color:#F8FAFC;
+    margin-bottom:12px;
+    display:block;
+}
+
+/* REPORT SECTION */
+.report-container{
     background:#111827;
-    padding:25px;
-    border-radius:8px;
     border:1px solid #1F2937;
+    border-radius:12px;
+    padding:40px;
+    margin:30px 0;
+}
+
+.report-header{
+    text-align:center;
+    margin-bottom:30px;
+}
+
+.report-title{
+    font-size:18px;
+    font-weight:700;
+    color:#F8FAFC;
+    margin-bottom:8px;
+}
+
+.report-divider{
+    height:1px;
+    background:#1F2937;
     margin:20px 0;
 }
 
-.analysis-title{
-    color:#F3F4F6;
-    font-size:16px;
-    font-weight:600;
+/* DETECTED SYMPTOMS */
+.symptoms-section{
+    margin:25px 0;
+}
+
+.section-title{
+    font-size:14px;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:0.5px;
+    color:#94A3B8;
     margin-bottom:15px;
 }
 
@@ -134,61 +118,118 @@ st.markdown("""
     display:inline-block;
     background:#1F2937;
     color:#10B981;
-    padding:6px 12px;
+    padding:8px 16px;
     border-radius:6px;
-    margin:4px;
-    font-size:13px;
+    margin:6px 6px 6px 0;
+    font-size:14px;
+    font-weight:500;
 }
 
-/* PRIMARY DIAGNOSIS */
-.diagnosis-card{
-    background:#111827;
-    padding:35px;
-    border-radius:8px;
-    border:2px solid #3B82F6;
+/* PRIMARY ASSESSMENT */
+.assessment-section{
     margin:30px 0;
+    text-align:center;
 }
 
-.diagnosis-label{
-    color:#9CA3AF;
+.assessment-label{
     font-size:12px;
+    font-weight:700;
     text-transform:uppercase;
     letter-spacing:0.5px;
-    margin-bottom:15px;
+    color:#94A3B8;
+    margin-bottom:12px;
 }
 
-.diagnosis-name{
-    font-size:42px;
+.assessment-disease{
+    font-size:36px;
     font-weight:700;
-    color:#F3F4F6;
+    color:#2563EB;
     margin:15px 0;
 }
 
-.diagnosis-grid{
-    display:grid;
-    grid-template-columns:1fr 1fr 1fr;
-    gap:20px;
-    margin-top:25px;
-}
-
-.diagnosis-stat{
+/* CONFIDENCE VISUAL */
+.confidence-section{
     background:#0B1220;
-    padding:15px;
-    border-radius:6px;
-    border:1px solid #1F2937;
+    padding:25px;
+    border-radius:8px;
+    margin:20px 0;
+    text-align:center;
 }
 
-.stat-label{
-    color:#9CA3AF;
+.confidence-label{
     font-size:12px;
+    font-weight:700;
     text-transform:uppercase;
-    margin-bottom:8px;
+    letter-spacing:0.5px;
+    color:#94A3B8;
+    margin-bottom:15px;
 }
 
-.stat-value{
-    color:#3B82F6;
-    font-size:24px;
+.confidence-bar{
+    background:#1F2937;
+    height:12px;
+    border-radius:6px;
+    overflow:hidden;
+    margin:15px 0;
+}
+
+.confidence-fill{
+    height:100%;
+    background:linear-gradient(90deg, #10B981 0%, #2563EB 100%);
+}
+
+.confidence-value{
+    font-size:32px;
     font-weight:700;
+    color:#2563EB;
+    margin-top:10px;
+}
+
+/* SPECIALIST RECOMMENDATION */
+.specialist-section{
+    background:#0B1220;
+    padding:25px;
+    border-radius:8px;
+    margin:20px 0;
+}
+
+.specialist-label{
+    font-size:12px;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:0.5px;
+    color:#94A3B8;
+    margin-bottom:10px;
+}
+
+.specialist-name{
+    font-size:20px;
+    font-weight:600;
+    color:#F8FAFC;
+}
+
+/* AI CLINICAL NOTE */
+.clinical-note{
+    background:#0B1220;
+    border-left:4px solid #2563EB;
+    padding:20px;
+    border-radius:8px;
+    margin:25px 0;
+}
+
+.clinical-note-title{
+    font-size:12px;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:0.5px;
+    color:#94A3B8;
+    margin-bottom:12px;
+}
+
+.clinical-note-text{
+    font-size:15px;
+    color:#CBD5E1;
+    line-height:1.7;
 }
 
 /* SECONDARY DIAGNOSES */
@@ -197,182 +238,147 @@ st.markdown("""
 }
 
 .secondary-title{
-    color:#F3F4F6;
-    font-size:16px;
-    font-weight:600;
+    font-size:14px;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:0.5px;
+    color:#94A3B8;
     margin-bottom:15px;
+    text-align:center;
 }
 
-.secondary-grid{
+.secondary-cards{
     display:grid;
     grid-template-columns:1fr 1fr;
     gap:15px;
+    margin-top:15px;
 }
 
 .secondary-card{
-    background:#111827;
-    padding:20px;
-    border-radius:8px;
+    background:#0B1220;
     border:1px solid #1F2937;
+    border-radius:8px;
+    padding:15px;
+    text-align:center;
+}
+
+.secondary-number{
+    font-size:12px;
+    font-weight:700;
+    color:#94A3B8;
+    text-transform:uppercase;
 }
 
 .secondary-disease{
     font-size:18px;
-    font-weight:600;
-    color:#F3F4F6;
-    margin-bottom:12px;
-}
-
-.secondary-stat{
-    color:#9CA3AF;
-    font-size:13px;
-    margin:6px 0;
-}
-
-/* RISK ASSESSMENT */
-.risk-card{
-    background:#111827;
-    padding:25px;
-    border-radius:8px;
-    border:1px solid #1F2937;
-    margin:25px 0;
-}
-
-.risk-title{
-    color:#F3F4F6;
-    font-size:16px;
-    font-weight:600;
-    margin-bottom:20px;
-}
-
-.risk-bar{
-    background:#0B1220;
-    height:8px;
-    border-radius:4px;
-    overflow:hidden;
-    margin:15px 0;
-}
-
-.risk-fill{
-    height:100%;
-    background:linear-gradient(90deg, #10B981, #3B82F6);
-}
-
-.risk-label{
-    font-size:14px;
-    font-weight:600;
-    color:#F3F4F6;
-    margin-top:12px;
-}
-
-/* CLINICAL ADVICE */
-.advice-card{
-    background:#111827;
-    padding:25px;
-    border-radius:8px;
-    border-left:4px solid #3B82F6;
-    margin:25px 0;
-}
-
-.advice-title{
-    color:#F3F4F6;
-    font-size:16px;
-    font-weight:600;
-    margin-bottom:12px;
-}
-
-.advice-text{
-    color:#D1D5DB;
-    font-size:14px;
-    line-height:1.6;
+    font-weight:700;
+    color:#F8FAFC;
     margin:8px 0;
 }
 
-.advice-warning{
-    color:#9CA3AF;
-    font-size:12px;
-    margin-top:15px;
-    padding-top:15px;
-    border-top:1px solid #1F2937;
+.secondary-confidence{
+    font-size:14px;
+    color:#10B981;
+    font-weight:600;
+}
+
+/* DISCLAIMER */
+.disclaimer-card{
+    background:#1F2937;
+    border:1px solid #374151;
+    border-radius:8px;
+    padding:20px;
+    margin:25px 0;
+}
+
+.disclaimer-title{
+    font-size:13px;
+    font-weight:700;
+    color:#FBBF24;
+    margin-bottom:8px;
+    text-transform:uppercase;
+}
+
+.disclaimer-text{
+    font-size:14px;
+    color:#CBD5E1;
+    line-height:1.6;
 }
 
 /* EMERGENCY ALERT */
 .emergency-card{
     background:#7F1D1D;
-    padding:25px;
+    border:2px solid #DC2626;
     border-radius:8px;
-    border-left:4px solid #DC2626;
+    padding:20px;
     margin:25px 0;
 }
 
 .emergency-title{
-    color:#FCA5A5;
-    font-size:16px;
+    font-size:13px;
     font-weight:700;
-    margin-bottom:12px;
+    color:#FCA5A5;
+    text-transform:uppercase;
+    margin-bottom:8px;
 }
 
 .emergency-text{
-    color:#F3F4F6;
     font-size:14px;
-    line-height:1.6;
-    margin:8px 0;
-}
-
-/* TIMELINE */
-.timeline-card{
-    background:#111827;
-    padding:25px;
-    border-radius:8px;
-    border:1px solid #1F2937;
-    margin:25px 0;
-}
-
-.timeline-title{
     color:#F3F4F6;
-    font-size:16px;
-    font-weight:600;
-    margin-bottom:20px;
+    line-height:1.6;
 }
 
-.timeline-item{
+/* HISTORY */
+.history-container{
+    margin:30px 0;
+}
+
+.history-item{
+    background:#111827;
+    border:1px solid #1F2937;
+    border-radius:8px;
     padding:15px;
-    background:#0B1220;
-    border-radius:6px;
-    border-left:3px solid #3B82F6;
     margin-bottom:12px;
 }
 
-.timeline-date{
-    color:#9CA3AF;
+.history-date{
     font-size:12px;
+    color:#94A3B8;
+    font-weight:600;
 }
 
-.timeline-content{
-    color:#F3F4F6;
+.history-disease{
+    font-size:16px;
+    color:#2563EB;
+    font-weight:600;
+    margin-top:6px;
+}
+
+.history-confidence{
     font-size:14px;
-    margin-top:8px;
-    font-weight:500;
+    color:#10B981;
+    margin-top:4px;
 }
 
 /* FOOTER */
-.footer-section{
-    padding:30px 0;
-    margin-top:40px;
-    border-top:1px solid #1F2937;
+.footer-container{
     text-align:center;
+    margin-top:60px;
+    padding:30px 0;
+    border-top:1px solid #1F2937;
+    color:#94A3B8;
 }
 
 .footer-title{
-    color:#F3F4F6;
     font-size:14px;
     font-weight:600;
-    margin-bottom:12px;
+    color:#F8FAFC;
+    margin-bottom:8px;
 }
 
 .footer-text{
-    color:#9CA3AF;
     font-size:12px;
+    color:#94A3B8;
     line-height:1.8;
 }
 
@@ -384,12 +390,19 @@ footer{
 """, unsafe_allow_html=True)
 
 
-# ---------------- SESSION ----------------
+# ========== SESSION STATE ==========
 if "page" not in st.session_state:
     st.session_state.page = "register"
 
 if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
+
+if "show_report" not in st.session_state:
+    st.session_state.show_report = False
+
+if "report_data" not in st.session_state:
+    st.session_state.report_data = None
+
 
 # =====================================================
 # REGISTER PAGE
@@ -399,53 +412,31 @@ if (
     and not st.session_state.logged_in
 ):
 
-    st.title("🩺 AI Health Assistant")
+    st.title("🩺 AI Healthcare Assistant")
     st.subheader("Create Account")
 
     username = st.text_input("Username")
-    password = st.text_input(
-        "Password",
-        type="password"
-    )
-    confirm = st.text_input(
-        "Confirm Password",
-        type="password"
-    )
+    password = st.text_input("Password", type="password")
+    confirm = st.text_input("Confirm Password", type="password")
 
     if st.button("Register"):
 
         if password != confirm:
-
-            st.error(
-                "Passwords do not match"
-            )
+            st.error("Passwords do not match")
 
         elif register(username, password):
-
-            st.success(
-                "Registration Successful"
-            )
-
+            st.success("Registration Successful")
             st.session_state.page = "login"
-
             st.rerun()
 
         else:
-
-            st.error(
-                "Username already exists"
-            )
+            st.error("Username already exists")
 
     st.write("---")
-
-    st.write(
-        "Already have an account?"
-    )
+    st.write("Already have an account?")
 
     if st.button("Go to Login"):
-
         st.session_state.page = "login"
-
         st.rerun()
 
 # =====================================================
@@ -458,320 +449,283 @@ elif (
 
     st.title("🔐 Login")
 
-    username = st.text_input(
-        "Username",
-        key="login_user"
-    )
-
-    password = st.text_input(
-        "Password",
-        type="password",
-        key="login_pass"
-    )
+    username = st.text_input("Username", key="login_user")
+    password = st.text_input("Password", type="password", key="login_pass")
 
     if st.button("Login"):
 
         if login(username, password):
-
             st.session_state.logged_in = True
             st.session_state.username = username
-
-            st.success(
-                "Login Successful"
-            )
-
+            st.success("Login Successful")
             st.rerun()
 
         else:
-
-            st.error(
-                "Invalid username or password"
-            )
+            st.error("Invalid username or password")
 
     st.write("---")
-
     st.write("New user?")
 
     if st.button("Create Account"):
-
         st.session_state.page = "register"
-
         st.rerun()
 
 # =====================================================
-# MAIN APPLICATION - PROFESSIONAL HEALTHCARE
+# MAIN APPLICATION - DXGPT STYLE
 # =====================================================
 elif st.session_state.logged_in:
 
-    # ========== HEADER ==========
-    st.markdown("""
-    <div class='header-section'>
-    <div class='header-title'>🩺 AI Healthcare Assistant</div>
-    <div class='header-subtitle'>Clinical Symptom Analysis & Decision Support System</div>
-    <div class='header-tags'>
-    <span class='tag'>Secure</span>
-    <span class='tag'>Explainable</span>
-    <span class='tag'>Fast</span>
-    </div>
-    </div>
-    """, unsafe_allow_html=True)
-
-    # ========== PATIENT PROFILE ==========
-    st.markdown(f"""
-    <div class='patient-card'>
-    <div class='card-label'>Patient Profile</div>
-    <div class='profile-row'>
-    <span class='profile-key'>Username</span>
-    <span class='profile-value'>{st.session_state.username}</span>
-    </div>
-    <div class='profile-row'>
-    <span class='profile-key'>Assessments</span>
-    <span class='profile-value'>0</span>
-    </div>
-    <div class='profile-row'>
-    <span class='profile-key'>Last Assessment</span>
-    <span class='profile-value'>-</span>
-    </div>
-    <div class='profile-row'>
-    <span class='profile-key'>Status</span>
-    <span class='profile-value' style='color:#10B981;'>Active</span>
-    </div>
-    </div>
-    """, unsafe_allow_html=True)
-
-    col_logout = st.columns([4, 1])[1]
+    # Logout button
+    col_logout = st.columns([10, 1])[1]
     with col_logout:
-        if st.button("Logout", use_container_width=True):
+        if st.button("Logout"):
             st.session_state.logged_in = False
             st.session_state.page = "login"
             st.rerun()
 
     st.write("")
 
-    # ========== SYMPTOM INPUT ==========
-    st.markdown("""
-    <div class='input-card'>
-    <div class='input-title'>Symptom Assessment</div>
-    <div class='input-description'>Describe your symptoms in your own words. Example: "I've had fever, headache and body pain for 2 days."</div>
-    </div>
-    """, unsafe_allow_html=True)
+    # ========== HERO SECTION ==========
+    if not st.session_state.show_report:
 
-    symptoms = st.text_area(
-        "",
-        placeholder='Describe your symptoms...',
-        height=120,
-        label_visibility="collapsed"
-    )
+        st.markdown("""
+        <div class='hero-container'>
+        <div class='hero-title'>🩺 AI Healthcare Assistant</div>
+        <div class='hero-subtitle'>Intelligent Clinical Decision Support</div>
+        <div class='hero-description'>
+        Analyze your symptoms, identify potential medical conditions, and receive specialist recommendations. Our AI provides clinical insights to support your healthcare decisions.
+        </div>
+        <div class='divider'></div>
+        </div>
+        """, unsafe_allow_html=True)
 
-    col_analyze, col_history = st.columns(2)
+        st.write("")
 
-    with col_analyze:
-        analyze_btn = st.button("Analyze", use_container_width=True, key="analyze")
+        # ========== SYMPTOM INPUT ==========
+        st.markdown("<span class='input-label'>Describe Your Symptoms</span>", unsafe_allow_html=True)
 
-    with col_history:
-        history_btn = st.button("Assessment History", use_container_width=True, key="history")
+        symptoms = st.text_area(
+            "",
+            placeholder="Example: I've had fever, cough and body aches for 3 days",
+            height=140,
+            label_visibility="collapsed"
+        )
 
-    if analyze_btn:
+        st.write("")
 
-        if not is_medical_input(symptoms):
-            st.error("Please enter valid medical symptoms.")
+        col1, col2, col3 = st.columns([1, 1, 2])
 
-        else:
+        with col1:
+            analyze_btn = st.button("Analyze", use_container_width=True, key="analyze")
 
-            st.write("")
+        with col2:
+            history_btn = st.button("History", use_container_width=True, key="history")
 
-            # ========== ANALYSIS PROCESSING ==========
-            with st.status("Processing analysis...", expanded=False):
-                st.write("Reading symptoms...")
-                time.sleep(0.3)
-                st.write("Extracting medical information...")
-                time.sleep(0.3)
-                st.write("Comparing with disease database...")
-                time.sleep(0.3)
-                st.write("Calculating confidence scores...")
-                time.sleep(0.2)
+        if analyze_btn:
 
-            # Extract features
-            features = extract(symptoms)
-            detected_symptoms = [k for k, v in features.items() if v]
+            if not is_medical_input(symptoms):
+                st.error("Please enter valid medical symptoms.")
 
-            # ========== ANALYSIS RESULTS ==========
-            st.markdown("""
-            <div class='analysis-card'>
-            <div class='analysis-title'>Analysis Results</div>
+            else:
+
+                # Processing
+                with st.spinner("Analyzing symptoms..."):
+                    time.sleep(1)
+                    features = extract(symptoms)
+                    detected_symptoms = [k for k, v in features.items() if v]
+                    predictions = predict_disease(features)
+
+                # Store in session
+                st.session_state.show_report = True
+                st.session_state.report_data = {
+                    "symptoms": symptoms,
+                    "detected": detected_symptoms,
+                    "predictions": predictions,
+                    "timestamp": datetime.now()
+                }
+
+                # Save to history
+                save_history(
+                    st.session_state.username,
+                    {
+                        "input": symptoms,
+                        "prediction": predictions,
+                        "timestamp": datetime.now().strftime("%d-%m-%Y %H:%M")
+                    }
+                )
+
+                st.rerun()
+
+        if history_btn:
+            st.session_state.show_report = "history"
+            st.rerun()
+
+    # ========== REPORT VIEW ==========
+    elif st.session_state.show_report == True and st.session_state.report_data:
+
+        data = st.session_state.report_data
+
+        if st.button("← Back"):
+            st.session_state.show_report = False
+            st.session_state.report_data = None
+            st.rerun()
+
+        st.write("")
+
+        # ========== CLINICAL ASSESSMENT REPORT ==========
+        st.markdown("""
+        <div class='report-container'>
+        <div class='report-header'>
+        <div class='report-title'>Clinical Assessment Report</div>
+        <div class='report-divider'></div>
+        </div>
+        """, unsafe_allow_html=True)
+
+        # Detected Symptoms
+        st.markdown("<div class='section-title'>Detected Symptoms</div>", unsafe_allow_html=True)
+
+        for symptom in data["detected"]:
+            st.markdown(f"<span class='symptom-badge'>✓ {symptom.title()}</span>", unsafe_allow_html=True)
+
+        st.write("")
+
+        # Primary Assessment
+        if data["predictions"]:
+            primary = data["predictions"][0]
+
+            st.markdown(f"""
+            <div class='assessment-section'>
+            <div class='assessment-label'>Primary Assessment</div>
+            <div class='assessment-disease'>{primary['disease']}</div>
+            </div>
             """, unsafe_allow_html=True)
 
-            for symptom in detected_symptoms:
-                st.markdown(f"<span class='symptom-badge'>✓ {symptom.title()}</span>", unsafe_allow_html=True)
+            # Confidence Visual
+            st.markdown("""
+            <div class='confidence-section'>
+            <div class='confidence-label'>Clinical Confidence</div>
+            """, unsafe_allow_html=True)
 
-            st.markdown("</div>", unsafe_allow_html=True)
+            st.markdown(f"""
+            <div class='confidence-bar'>
+            <div class='confidence-fill' style='width:{min(primary['confidence'], 100)}%;'></div>
+            </div>
+            <div class='confidence-value'>{primary['confidence']}%</div>
+            </div>
+            """, unsafe_allow_html=True)
 
-            st.write("")
+            # Specialist Recommendation
+            st.markdown(f"""
+            <div class='specialist-section'>
+            <div class='specialist-label'>Recommended Specialist</div>
+            <div class='specialist-name'>{primary['doctor']}</div>
+            </div>
+            """, unsafe_allow_html=True)
 
-            # Get predictions
-            predictions = predict_disease(features)
+            # AI Clinical Note
+            st.markdown(f"""
+            <div class='clinical-note'>
+            <div class='clinical-note-title'>AI Clinical Note</div>
+            <div class='clinical-note-text'>
+            The symptom combination suggests a possible diagnosis of <b>{primary['disease'].lower()}</b>. 
+            A consultation with a <b>{primary['doctor']}</b> is recommended for proper evaluation and treatment.
+            </div>
+            </div>
+            """, unsafe_allow_html=True)
 
-            # ========== EMERGENCY ALERT ==========
-            if features.get("chest pain") and features.get("breathlessness"):
-
+            # Emergency Alert
+            if (
+                data["detected"] and
+                "chest pain" in data["detected"] and
+                "breathlessness" in data["detected"]
+            ):
                 st.markdown("""
                 <div class='emergency-card'>
                 <div class='emergency-title'>⚠️ Clinical Alert</div>
                 <div class='emergency-text'>
-                <b>Detected combination:</b> Chest pain + Breathlessness
-                </div>
-                <div class='emergency-text'>
-                <b>Potential concern:</b> Respiratory or cardiac condition
-                </div>
-                <div class='emergency-text'>
-                <b>Recommended action:</b> Seek immediate medical attention
+                The combination of chest pain and breathlessness may indicate a serious condition. 
+                <b>Seek immediate medical attention.</b>
                 </div>
                 </div>
                 """, unsafe_allow_html=True)
 
-                st.write("")
+            # Secondary Diagnoses
+            if len(data["predictions"]) > 1:
+                st.markdown("<div class='secondary-title'>Alternative Assessments</div>", unsafe_allow_html=True)
 
-            # ========== PRIMARY DIAGNOSIS ==========
-            if predictions:
-                primary = predictions[0]
+                st.markdown("<div class='secondary-cards'>", unsafe_allow_html=True)
 
-                st.markdown(f"""
-                <div class='diagnosis-card'>
-                <div class='diagnosis-label'>Primary Assessment</div>
-                <div class='diagnosis-name'>{primary['disease']}</div>
-                
-                <div class='diagnosis-grid'>
-                <div class='diagnosis-stat'>
-                <div class='stat-label'>Confidence Score</div>
-                <div class='stat-value'>{primary['confidence']}%</div>
-                </div>
-                
-                <div class='diagnosis-stat'>
-                <div class='stat-label'>Risk Level</div>
-                <div class='stat-value'>""" + ("Low" if primary['confidence'] > 70 else "Moderate" if primary['confidence'] > 50 else "High") + """</div>
-                </div>
-                
-                <div class='diagnosis-stat'>
-                <div class='stat-label'>Specialist</div>
-                <div class='stat-value' style='font-size:16px;'>{primary['doctor']}</div>
-                </div>
-                </div>
-                </div>
-                """, unsafe_allow_html=True)
-
-                st.write("")
-
-                # ========== SECONDARY DIAGNOSES ==========
-                if len(predictions) > 1:
+                for i, pred in enumerate(data["predictions"][1:3]):
                     st.markdown(f"""
-                    <div class='secondary-section'>
-                    <div class='secondary-title'>Alternative Assessments</div>
+                    <div class='secondary-card'>
+                    <div class='secondary-number'>Alternative {i+2}</div>
+                    <div class='secondary-disease'>{pred['disease']}</div>
+                    <div class='secondary-confidence'>{pred['confidence']}% • {pred['doctor']}</div>
+                    </div>
                     """, unsafe_allow_html=True)
 
-                    cols = st.columns(2)
+                st.markdown("</div>", unsafe_allow_html=True)
 
-                    for i, pred in enumerate(predictions[1:3]):
-                        with cols[i]:
-                            st.markdown(f"""
-                            <div class='secondary-card'>
-                            <div class='secondary-disease'>{i+2}. {pred['disease']}</div>
-                            <div class='secondary-stat'>Confidence: {pred['confidence']}%</div>
-                            <div class='secondary-stat'>Specialist: {pred['doctor']}</div>
-                            </div>
-                            """, unsafe_allow_html=True)
-
-                    st.markdown("</div>", unsafe_allow_html=True)
-
-                st.write("")
-
-                # ========== RISK ASSESSMENT ==========
-                st.markdown(f"""
-                <div class='risk-card'>
-                <div class='risk-title'>Risk Assessment</div>
-                <div class='risk-bar'>
-                <div class='risk-fill' style='width:{min(primary['confidence'], 100)}%;'></div>
-                </div>
-                <div class='risk-label'>""" + ("Low Risk" if primary['confidence'] > 70 else "Moderate Risk" if primary['confidence'] > 50 else "High Risk") + """</div>
-                </div>
-                """, unsafe_allow_html=True)
-
-                st.write("")
-
-                # ========== CLINICAL ADVICE ==========
-                st.markdown(f"""
-                <div class='advice-card'>
-                <div class='advice-title'>Clinical Recommendation</div>
-                <div class='advice-text'>
-                <b>Assessment:</b> Based on the symptom analysis, {primary['disease'].lower()} is the primary diagnosis.
-                </div>
-                <div class='advice-text'>
-                <b>Recommended specialist:</b> {primary['doctor']}
-                </div>
-                <div class='advice-text'>
-                <b>Suggested actions:</b>
-                <br>• Schedule an appointment with a {primary['doctor'].lower()}
-                <br>• Monitor symptoms for changes
-                <br>• Maintain adequate rest and hydration
-                </div>
-                <div class='advice-warning'>
-                ℹ️ This assessment is AI-assisted analysis only. Always consult with licensed healthcare professionals for diagnosis and treatment.
-                </div>
-                </div>
-                """, unsafe_allow_html=True)
-
-            save_history(
-                st.session_state.username,
-                {
-                    "input": symptoms,
-                    "prediction": predictions,
-                    "timestamp": datetime.now().strftime("%d-%m-%Y %H:%M")
-                }
-            )
-
-    if history_btn:
+        st.markdown("</div>", unsafe_allow_html=True)
 
         st.write("")
 
-        # ========== ASSESSMENT TIMELINE ==========
+        # ========== DISCLAIMER ==========
         st.markdown("""
-        <div class='timeline-card'>
-        <div class='timeline-title'>Assessment Timeline</div>
+        <div class='disclaimer-card'>
+        <div class='disclaimer-title'>⚠️ Important Notice</div>
+        <div class='disclaimer-text'>
+        This system provides AI-assisted health insights and is not a substitute for professional medical diagnosis, 
+        treatment, or advice. Always consult with licensed healthcare professionals for medical concerns.
+        </div>
+        </div>
         """, unsafe_allow_html=True)
 
-        history = get_history(
-            st.session_state.username
-        )
+    # ========== HISTORY VIEW ==========
+    elif st.session_state.show_report == "history":
+
+        if st.button("← Back"):
+            st.session_state.show_report = False
+            st.rerun()
+
+        st.write("")
+
+        st.markdown("<h3>Assessment History</h3>", unsafe_allow_html=True)
+
+        history = get_history(st.session_state.username)
 
         if not history:
             st.info("No assessment history yet.")
         else:
+            st.markdown("<div class='history-container'>", unsafe_allow_html=True)
+
             for item in reversed(history):
                 timestamp = item.get("timestamp", "N/A")
                 pred = item["prediction"][0] if item["prediction"] else None
 
                 if pred:
                     st.markdown(f"""
-                    <div class='timeline-item'>
-                    <div class='timeline-date'>{timestamp}</div>
-                    <div class='timeline-content'>{pred['disease']} • {pred['confidence']}% confidence</div>
+                    <div class='history-item'>
+                    <div class='history-date'>{timestamp}</div>
+                    <div class='history-disease'>{pred['disease']}</div>
+                    <div class='history-confidence'>Confidence: {pred['confidence']}% • {pred['doctor']}</div>
                     </div>
                     """, unsafe_allow_html=True)
 
-        st.markdown("</div>", unsafe_allow_html=True)
-
-    st.write("")
+            st.markdown("</div>", unsafe_allow_html=True)
 
     # ========== FOOTER ==========
+    st.write("")
     st.markdown("""
-    <div class='footer-section'>
+    <div class='footer-container'>
     <div class='footer-title'>AI Healthcare Assistant</div>
     <div class='footer-text'>
-    Powered by: Python • Streamlit • Machine Learning • Medical Knowledge Base
+    Clinical Decision Support System
     <br><br>
     Developed By<br>
     Bharath M Gowda (1NH24CS040)<br>
-    Mohammed Kasim G (1NH25CS416)
-    <br><br>
+    Mohammed Kasim G (1NH25CS416)<br>
+    <br>
     © 2026
     </div>
     </div>
