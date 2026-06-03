@@ -1,6 +1,10 @@
 import streamlit as st
-from auth import register, login
-
+from auth import (
+    register,
+    login,
+    save_history,
+    get_history
+)
 st.set_page_config(
     page_title="AI Health Assistant",
     page_icon="🩺",
@@ -88,7 +92,6 @@ elif st.session_state.page == "login" and not st.session_state.logged_in:
         st.session_state.page = "register"
         st.rerun()
 
-# ---------------- MAIN PAGE ----------------
 # ---------------- MAIN PAGE ----------------
 elif st.session_state.logged_in:
 
